@@ -9,9 +9,25 @@ public class Bird : MonoBehaviour, IGameObject {
     [SerializeField]
     private float _jumpValue = 1.0f;
 
-	// Use this for initialization
-	void Start () {
-		
+    private Vector3 _startPosition = Vector3.zero;
+    private Quaternion _startRotation = Quaternion.identity;
+     
+    private void Awake()
+    {
+        _startPosition = transform.position;
+        _startRotation = transform.rotation;
+    }
+
+    public void Init()
+    {
+        transform.position = _startPosition;
+        transform.rotation = Quaternion.identity;
+    }
+
+    // Use this for initialization
+    void Start ()
+    {
+        _rigidbody.constraints = RigidbodyConstraints2D.FreezePositionY;
 	}
 
     // Update is called once per frame
@@ -21,6 +37,12 @@ public class Bird : MonoBehaviour, IGameObject {
             _rigidbody.AddForce(new Vector2(0, _jumpValue));
         }
 	}
+
+    public void FreezePositionY(bool value)
+    {
+        //_rigidbody.constraints = value ? RigidbodyConstraints2D.FreezePositionY : RigidbodyConstraints2D.None;
+        _rigidbody.constraints = value ? (RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation) : RigidbodyConstraints2D.FreezeRotation;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

@@ -1,13 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class Manager : MonoBehaviour {
-    private static Manager _intance = null;
-    public static Manager Instance { get { return _intance; } }
-
-    
-
+public class Manager : Singleton<Manager> {
     [SerializeField]
     private Bird _bird = null;
     [SerializeField]
@@ -28,19 +24,69 @@ public class Manager : MonoBehaviour {
 
     private List<Pipe> _pipeList = new List<Pipe>();
     public float Speed { get { return _speed; } }
-    public bool IsPlay { get { return _isPlay; } set { _isPlay = value; } }
+    public bool IsPlay
+    {
+        get { return _isPlay; }
+        set
+        {
+            _isPlay = value;
 
+            if (!_isPlay)
+            {
+                UIManager.Instance.InvokeGameOver();
+            }
+        }
+    }
 
-    private bool _isPlay = true;
+    public int Score { get { return _score; } }
+    public int BestScore { get { return _bestScore; } }
+
+    public bool IsBestScore
+    {
+        get
+        {
+            return _isBestScore;
+        }
+
+        set
+        {
+            _isBestScore = value;
+        }
+    }
+
+    private bool _isPlay = false;
     private int _score = 0;
+    private int _bestScore = 0;
+    private bool _isBestScore = false;
 
-	// Use this for initialization
-	void Awake () {
-        _intance = this;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    private void Start()
+    {
+        Init();
+        UIManager.Instance.ShowTitle();
+        _bestScore = PlayerPrefs.GetInt("_bestScore");
+    }
+
+    private void Init()
+    {
+        _isBestScore = false;
+        _isPlay = false;
+        _score = 0;
+        _currentTime = 0.0f;
+        _bird.Init();
+        _ground.Init();
+        _pipeList.ToArray().ToList().ForEach(x => Remove(x));
+        UIManager.Instance.Init();
+    }
+    public void Replay()
+    {
+        Init();
+        _isPlay = true;
+        UIManager.Instance.ShowScore();
+    }
+    // Update is called once per frame
+    void Update ()
+    {
+        _bird.FreezePositionY(!_isPlay);
         if (_isPlay)
         {
             _currentTime += Time.deltaTime;
@@ -78,6 +124,16 @@ public class Manager : MonoBehaviour {
     {
         _score++;
 
+        if (_bestScore < _score)
+        {
+            _bestScore = _score;
+            _isBestScore = true;
+
+            PlayerPrefs.SetInt("_bestScore", _bestScore);
+            PlayerPrefs.Save();
+        }
+        
+        UIManager.Instance.Score = _score;
         Debug.Log(_score);
     }
 }
