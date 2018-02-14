@@ -27,6 +27,7 @@ public class Manager : Singleton<Manager> {
 
     private Floor floor = null;
     private float h = 0.0f;
+    private float moveHorizontal = 0.0f;
 
     private List<Pipe> _pipeList = new List<Pipe>();
     private List<Floor> _floors = new List<Floor>();
@@ -104,9 +105,32 @@ public class Manager : Singleton<Manager> {
         _bird.FreezePositionY(!_isPlay);
         if (_isPlay)
         {
-            h = Input.GetAxis("Horizontal");
+
+            //플레이어 터치 이동
+            if (Input.touchCount > 0)
+            {
+                Vector2 touchPosition = Input.GetTouch(0).position;
+                if (touchPosition.x > Screen.width / 2)
+                {
+                    moveHorizontal = 1;
+                    if (Input.GetTouch(0).phase == TouchPhase.Ended)
+                    {
+                        moveHorizontal = 0f;
+                    }
+                }
+                else
+                {
+                    moveHorizontal = -1;
+                    if (Input.GetTouch(0).phase == TouchPhase.Ended)
+                    {
+                        moveHorizontal = 0f;
+                    }
+                }
+            }
+
+            //h = Input.GetAxis("Horizontal");
             
-            Vector2 moveDir = (Vector2.right * h);
+            Vector2 moveDir = (Vector2.right * moveHorizontal);
             //_bird.GetComponent<Rigidbody2D>().velocity = new Vector2(h * Time.deltaTime*10, _bird.GetComponent<Rigidbody2D>().velocity.y);
             _bird.GetComponent<Rigidbody2D>().AddForce(moveDir.normalized * Time.deltaTime * 100);
 
@@ -131,7 +155,6 @@ public class Manager : Singleton<Manager> {
                 }
                 floor.SetPositionX(Random.Range(-0.388f, 0.381f));
                 floor.gameObject.SetActive(true);
-                Debug.Log(floor);
                 _floors.Add(floor);
             }
 
@@ -185,6 +208,5 @@ public class Manager : Singleton<Manager> {
         }
         
         UIManager.Instance.Score = _score;
-        Debug.Log(_score);
     }
 }

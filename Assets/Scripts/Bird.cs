@@ -32,10 +32,11 @@ public class Bird : MonoBehaviour, IGameObject {
 
     // Update is called once per frame
     public void GameUpdate() {
-		if(Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            _rigidbody.AddForce(new Vector2(0, _jumpValue));
-        }
+		//if(Input.GetKeyDown(KeyCode.Mouse0))
+  //      {
+  //          _rigidbody.AddForce(new Vector2(0, _jumpValue));
+  //      }
+
 
         if (this.transform.position.x < -0.635f)
         {
