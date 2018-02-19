@@ -38,14 +38,14 @@ public class Bird : MonoBehaviour, IGameObject {
   //      }
 
 
-        if (this.transform.position.x < -0.635f)
+        if (this.transform.position.x < -0.482f)
         {
-            this.transform.position = new Vector2(-0.635f, this.transform.position.y);
+            this.transform.position = new Vector2(-0.482f, this.transform.position.y);
             _rigidbody.velocity = new Vector2(0.0f, _rigidbody.velocity.y);
         }
-        else if (this.transform.position.x > 0.635f)
+        else if (this.transform.position.x > 0.482f)
         {
-            this.transform.position = new Vector2(0.635f, this.transform.position.y);
+            this.transform.position = new Vector2(0.482f, this.transform.position.y);
             _rigidbody.velocity = new Vector2(0.0f, _rigidbody.velocity.y);
         }
 

@@ -10,7 +10,7 @@ public class MoveObject : MonoBehaviour,IGameObject {
     private float _endPositionX = -0.014f;
 
     public float _startPositionY = -1.0f;
-    public float _endPositionY = 1.0f;
+    public float _endPositionY = 1.5f;
 
     // Update is called once per frame
     virtual public void GameUpdate()

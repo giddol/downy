@@ -81,7 +81,7 @@ MonoBehaviour:
   _startPositionX: 0.05
   _endPositionX: -0.014
   _startPositionY: -1
-  _endPositionY: 1
+  _endPositionY: 1.1
   _topPipe: {fileID: 1315833902480066}
 --- !u!212 &212996575447417394
 SpriteRenderer:

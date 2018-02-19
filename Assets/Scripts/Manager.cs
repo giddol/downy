@@ -22,12 +22,15 @@ public class Manager : Singleton<Manager> {
     [SerializeField]
     private float _pipeRandomPostionY = 0.5f;
 
+    public GameObject QuitAlarm = null;
+
     private float _currentTime = 0.0f;
     private int floorNumber = 0;
 
     private Floor floor = null;
     private float h = 0.0f;
     private float moveHorizontal = 0.0f;
+    private float moveForce;
 
     private List<Pipe> _pipeList = new List<Pipe>();
     private List<Floor> _floors = new List<Floor>();
@@ -102,6 +105,25 @@ public class Manager : Singleton<Manager> {
     // Update is called once per frame
     void Update ()
     {
+        
+
+        //back키 누르면 종료
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.A))
+        {
+            if (QuitAlarm.activeSelf)
+            {
+                Application.Quit();
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            }
+            else
+            {
+                QuitAlarm.SetActive(true);
+                Invoke("InactiveQuitAlarm", 3.0f);
+            }
+        }
+
         _bird.FreezePositionY(!_isPlay);
         if (_isPlay)
         {
@@ -128,12 +150,25 @@ public class Manager : Singleton<Manager> {
                 }
             }
 
-            //h = Input.GetAxis("Horizontal");
-            
             Vector2 moveDir = (Vector2.right * moveHorizontal);
+            
+#if UNITY_EDITOR
+            h = Input.GetAxis("Horizontal");
+            moveDir = (Vector2.right * h);
+#endif
+
+            if (_bird.GetComponent<Rigidbody2D>().velocity.x == 0)
+            {
+                moveForce += moveDir.x;
+            }
+
+            
+
             //_bird.GetComponent<Rigidbody2D>().velocity = new Vector2(h * Time.deltaTime*10, _bird.GetComponent<Rigidbody2D>().velocity.y);
+            //_bird.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, _bird.GetComponent<Rigidbody2D>().velocity.y);
             _bird.GetComponent<Rigidbody2D>().AddForce(moveDir.normalized * Time.deltaTime * 100);
 
+            //Debug.Log(moveForce);
 
             _currentTime += Time.deltaTime;
             if(_createTime<_currentTime)
@@ -160,15 +195,7 @@ public class Manager : Singleton<Manager> {
 
             _bird.GameUpdate();
             _ground.GameUpdate();
-            //_pipeList.ForEach((x) =>
-            //{
-            //    x.GameUpdate();
-            //    if (x.IsNeedInvokeScoreCheck(_bird.transform.position))
-            //    {
-            //        InvokeScore();
-            //    }
 
-            //});
 
             _floors.ForEach((x) =>
             {
@@ -177,7 +204,6 @@ public class Manager : Singleton<Manager> {
                 {
                     //InvokeScore();
                 }
-
             });
         }
     }
@@ -198,6 +224,8 @@ public class Manager : Singleton<Manager> {
     {
         _score = score;
 
+        CheckAchievement(score);
+
         if (_bestScore < _score)
         {
             _bestScore = _score;
@@ -208,5 +236,19 @@ public class Manager : Singleton<Manager> {
         }
         
         UIManager.Instance.Score = _score;
+    }
+
+    public void CheckAchievement(int score)
+    {
+        if (PlayerPrefs.GetInt("Ach1") != 1 && score >= 5)
+        {
+            PlayerPrefs.SetInt("Ach1", 1);
+            PlayerPrefs.Save();
+            UIManager.Instance.testText.text = "업적1 달성";
+        }
+    }
+    void InactiveQuitAlarm()
+    {
+        QuitAlarm.SetActive(false);
     }
 }
