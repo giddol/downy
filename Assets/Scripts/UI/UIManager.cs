@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
+using UnityEngine.SocialPlatforms;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -46,7 +47,6 @@ public class UIManager : Singleton<UIManager>
     private void Start()
     {
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
-            .EnableSavedGames()
             .Build();
 
         PlayGamesPlatform.InitializeInstance(config);
@@ -63,6 +63,7 @@ public class UIManager : Singleton<UIManager>
 
     public void SignIn()
     {
+        testText.text = "왜";
         PlayGamesPlatform.Instance.Authenticate((bool success) =>
         {
             if (success)
@@ -78,6 +79,7 @@ public class UIManager : Singleton<UIManager>
                 Debug.Log("fail");
             }
         });
+        testText.text = "안될까";
     }
 
     public void ShowTitle()

@@ -1,9 +1,9 @@
 lastUpgrade=00950
 proj.pluginVersion=0.9.50
-proj.AppId=8395851740
-and.BundleId=com.bootbug.downy
+proj.AppId=86105130897
+and.BundleId=com.bootbug.test180221
 proj.classDir=Assets
 proj.ConstantsClassName=GPGSIds
-and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0a%3c%21--%0d%0aGoogle+Play+game+services+IDs.%0d%0aSave+this+file+as+res%2fvalues%2fgames-ids.xml+in+your+project.%0d%0a--%3e%0d%0a%3cresources%3e%0d%0a++%3c%21--+app_id+--%3e%0d%0a++%3cstring+name%3d%22app_id%22+translatable%3d%22false%22%3e8395851740%3c%2fstring%3e%0d%0a++%3c%21--+package_name+--%3e%0d%0a++%3cstring+name%3d%22package_name%22+translatable%3d%22false%22%3ecom.bootbug.downy%3c%2fstring%3e%0d%0a++%3c%21--+achievement+ach1+--%3e%0d%0a++%3cstring+name%3d%22achievement_ach1%22+translatable%3d%22false%22%3eCggI3I-6ox8QAhAC%3c%2fstring%3e%0d%0a++%3c%21--+achievement+ach2+--%3e%0d%0a++%3cstring+name%3d%22achievement_ach2%22+translatable%3d%22false%22%3eCggI3I-6ox8QAhAD%3c%2fstring%3e%0d%0a++%3c%21--+achievement+ach3+--%3e%0d%0a++%3cstring+name%3d%22achievement_ach3%22+translatable%3d%22false%22%3eCggI3I-6ox8QAhAE%3c%2fstring%3e%0d%0a++%3c%21--+achievement+ach4+--%3e%0d%0a++%3cstring+name%3d%22achievement_ach4%22+translatable%3d%22false%22%3eCggI3I-6ox8QAhAF%3c%2fstring%3e%0d%0a++%3c%21--+achievement+ach5+--%3e%0d%0a++%3cstring+name%3d%22achievement_ach5%22+translatable%3d%22false%22%3eCggI3I-6ox8QAhAG%3c%2fstring%3e%0d%0a++%3c%21--+event+eventTest+--%3e%0d%0a++%3cstring+name%3d%22event_eventtest%22+translatable%3d%22false%22%3eCggI3I-6ox8QAhAB%3c%2fstring%3e%0d%0a%3c%2fresources%3e%0d
-and.ClientId=8395851740-c1efkvfilhv14en6d4jic1rh07fudk4u.apps.googleusercontent.com
+and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0a%3c%21--%0d%0aGoogle+Play+game+services+IDs.%0d%0aSave+this+file+as+res%2fvalues%2fgames-ids.xml+in+your+project.%0d%0a--%3e%0d%0a%3cresources%3e%0d%0a++%3c%21--+app_id+--%3e%0d%0a++%3cstring+name%3d%22app_id%22+translatable%3d%22false%22%3e86105130897%3c%2fstring%3e%0d%0a++%3c%21--+package_name+--%3e%0d%0a++%3cstring+name%3d%22package_name%22+translatable%3d%22false%22%3ecom.bootbug.test180221%3c%2fstring%3e%0d%0a%3c%2fresources%3e%0d
+and.ClientId=
 android.SetupDone=true

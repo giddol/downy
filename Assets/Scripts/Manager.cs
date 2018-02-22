@@ -76,6 +76,9 @@ public class Manager : Singleton<Manager> {
         Init();
         UIManager.Instance.ShowTitle();
         _bestScore = PlayerPrefs.GetInt("_bestScore");
+
+        for (int i = 0; i < 10; i++)
+            Debug.Log(Random.Range(0, 100));
     }
 
     private void Init()
@@ -102,28 +105,12 @@ public class Manager : Singleton<Manager> {
         _isPlay = true;
         UIManager.Instance.ShowScore();
     }
+
+
+
     // Update is called once per frame
-    void Update ()
+    void FixedUpdate()
     {
-        
-
-        //back키 누르면 종료
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.A))
-        {
-            if (QuitAlarm.activeSelf)
-            {
-                Application.Quit();
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#endif
-            }
-            else
-            {
-                QuitAlarm.SetActive(true);
-                Invoke("InactiveQuitAlarm", 3.0f);
-            }
-        }
-
         _bird.FreezePositionY(!_isPlay);
         if (_isPlay)
         {
@@ -196,7 +183,6 @@ public class Manager : Singleton<Manager> {
             _bird.GameUpdate();
             _ground.GameUpdate();
 
-
             _floors.ForEach((x) =>
             {
                 x.GameUpdate();
@@ -205,6 +191,26 @@ public class Manager : Singleton<Manager> {
                     //InvokeScore();
                 }
             });
+        }
+    }
+
+    private void Update()
+    {
+        //back키 누르면 종료
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.A))
+        {
+            if (QuitAlarm.activeSelf)
+            {
+                Application.Quit();
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            }
+            else
+            {
+                QuitAlarm.SetActive(true);
+                Invoke("InactiveQuitAlarm", 3.0f);
+            }
         }
     }
 
