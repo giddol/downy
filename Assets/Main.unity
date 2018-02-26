@@ -723,6 +723,7 @@ MonoBehaviour:
   _createTime: 1.5
   _pipeRandomHeight: 0.6
   _pipeRandomPostionY: 0.5
+  _gameOverPopup: {fileID: 983389175}
   QuitAlarm: {fileID: 1598727560}
 --- !u!4 &734184712
 Transform:

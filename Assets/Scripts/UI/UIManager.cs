@@ -46,6 +46,7 @@ public class UIManager : Singleton<UIManager>
 
     private void Start()
     {
+		/*
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
             .Build();
 
@@ -59,8 +60,9 @@ public class UIManager : Singleton<UIManager>
 
 
         SignIn();
+        */
     }
-
+	/*
     public void SignIn()
     {
         testText.text = "왜";
@@ -81,7 +83,7 @@ public class UIManager : Singleton<UIManager>
         });
         testText.text = "안될까";
     }
-
+	*/
     public void ShowTitle()
     {
         _title.gameObject.SetActive(true);
