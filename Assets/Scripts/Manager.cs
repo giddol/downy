@@ -22,6 +22,8 @@ public class Manager : Singleton<Manager> {
     [SerializeField]
     private float _pipeRandomPostionY = 0.5f;
 
+    public GameOverPopup _gameOverPopup = null;
+
     public GameObject QuitAlarm = null;
 
     private float _currentTime = 0.0f;
@@ -136,6 +138,7 @@ public class Manager : Singleton<Manager> {
                     }
                 }
             }
+            
 
             Vector2 moveDir = (Vector2.right * moveHorizontal);
             
@@ -192,6 +195,14 @@ public class Manager : Singleton<Manager> {
                 }
             });
         }
+        else {
+                if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+                {
+                    _gameOverPopup.gameObject.SetActive(false);
+                    Manager.Instance.Replay();
+                //UIManager.Instance.StartButton();
+            }
+            }
     }
 
     private void Update()
