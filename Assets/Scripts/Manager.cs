@@ -7,8 +7,6 @@ public class Manager : Singleton<Manager> {
     [SerializeField]
     private Bird _bird = null;
     [SerializeField]
-    private Ground _ground = null;
-    [SerializeField]
     private Pipe _pipe = null;
     [SerializeField]
     private Floor _floor = null;
@@ -91,7 +89,6 @@ public class Manager : Singleton<Manager> {
         _currentTime = 0.0f;
         floorNumber = 0;
         _bird.Init();
-        _ground.Init();
         _pipeList.ToArray().ToList().ForEach(x => Remove(x));
         _floors.ToArray().ToList().ForEach(x => Remove(x));
 
@@ -184,7 +181,6 @@ public class Manager : Singleton<Manager> {
             }
 
             _bird.GameUpdate();
-            _ground.GameUpdate();
 
             _floors.ForEach((x) =>
             {
@@ -194,15 +190,17 @@ public class Manager : Singleton<Manager> {
                     //InvokeScore();
                 }
             });
+
         }
-        else {
-                if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
-                {
-                    _gameOverPopup.gameObject.SetActive(false);
-                    Manager.Instance.Replay();
-                //UIManager.Instance.StartButton();
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+            {
+                _gameOverPopup.gameObject.SetActive(false);
+                Manager.Instance.Replay();
+            //UIManager.Instance.StartButton();
             }
-            }
+        }
     }
 
     private void Update()

@@ -49,6 +49,11 @@ public class Bird : MonoBehaviour, IGameObject {
             _rigidbody.velocity = new Vector2(0.0f, _rigidbody.velocity.y);
         }
 
+        if(this.transform.position.y > 1.08 || this.transform.position.y < -1.08)
+        {
+            Manager.Instance.IsPlay = false;
+        }
+
     }
 
     public void FreezePositionY(bool value)
@@ -61,9 +66,6 @@ public class Bird : MonoBehaviour, IGameObject {
     {
         switch(collision.gameObject.tag)
         {
-            case "Enemy":
-                Manager.Instance.IsPlay = false;
-                break;
             case "Floor":
                 int score = collision.gameObject.GetComponent<Floor>().FloorNumber;
                 Manager.Instance.UpdateScore(score);
