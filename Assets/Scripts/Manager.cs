@@ -14,18 +14,22 @@ public class Manager : Singleton<Manager> {
     [SerializeField]
     private float _speed = 0.01f;
     [SerializeField]
-    private float _createTime = 2.0f;
+    private float _createTime = 1.0f;
     [SerializeField]
     private float _pipeRandomHeight = 0.4f;
     [SerializeField]
     private float _pipeRandomPostionY = 0.5f;
+
+    [SerializeField]
+    private int floorNumber = 0;
 
     public GameOverPopup _gameOverPopup = null;
 
     public GameObject QuitAlarm = null;
 
     private float _currentTime = 0.0f;
-    private int floorNumber = 0;
+
+    
 
     private Floor floor = null;
     private float h = 0.0f;
@@ -92,15 +96,35 @@ public class Manager : Singleton<Manager> {
         _pipeList.ToArray().ToList().ForEach(x => Remove(x));
         _floors.ToArray().ToList().ForEach(x => Remove(x));
 
-        floor = GameObject.Instantiate(_floor);
-        floor.SetPositionY(-0.2f);
-        _floors.Add(floor);
-
         UIManager.Instance.Init();
     }
+
+    public void GenerateStartingFloor()
+    {
+        floor = GameObject.Instantiate(_floor);
+        floor.SetPositionY(-0.114f);
+        _floors.Add(floor);
+
+        floorNumber++;
+        floor = GameObject.Instantiate(_floor);
+        floor.SetPositionX(Random.Range(-0.388f, 0.381f));
+        floor.SetPositionY(-0.75f);
+        floor.FloorNumber = floorNumber;
+        _floors.Add(floor);
+
+        floorNumber++;
+        floor = GameObject.Instantiate(_floor);
+        floor.SetPositionX(Random.Range(-0.388f, 0.381f));
+        floor.SetPositionY(-1.5f);
+        floor.FloorNumber = floorNumber;
+        _floors.Add(floor);
+    }
+
     public void Replay()
     {
         Init();
+        GenerateStartingFloor();
+
         _isPlay = true;
         UIManager.Instance.ShowScore();
     }
@@ -155,8 +179,6 @@ public class Manager : Singleton<Manager> {
             //_bird.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, _bird.GetComponent<Rigidbody2D>().velocity.y);
             _bird.GetComponent<Rigidbody2D>().AddForce(moveDir.normalized * Time.deltaTime * 100);
 
-            //Debug.Log(moveForce);
-
             _currentTime += Time.deltaTime;
             if(_createTime<_currentTime)
             {
@@ -166,8 +188,9 @@ public class Manager : Singleton<Manager> {
                 //_pipe.SetPositionY(Random.Range(0.0f, _pipeRandomPostionY));
                 //_pipeList.Add(GameObject.Instantiate(_pipe));
                 floorNumber++;
-                if (floorNumber > 5)
+                if (floorNumber > 30)
                 {
+                    _createTime = 2.0f;
                     floor = GameObject.Instantiate(Resources.Load<Floor>("Floor2"));
                     floor.gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
                 }
@@ -177,7 +200,9 @@ public class Manager : Singleton<Manager> {
                 }
                 floor.SetPositionX(Random.Range(-0.388f, 0.381f));
                 floor.gameObject.SetActive(true);
+                floor.FloorNumber = floorNumber;
                 _floors.Add(floor);
+                
             }
 
             _bird.GameUpdate();
@@ -199,6 +224,10 @@ public class Manager : Singleton<Manager> {
                 _gameOverPopup.gameObject.SetActive(false);
                 Manager.Instance.Replay();
             //UIManager.Instance.StartButton();
+            }
+            if (Input.touchCount > 0)
+            {
+                UIManager.Instance.StartButton();
             }
         }
     }

@@ -15,7 +15,7 @@ public class UIManager : Singleton<UIManager>
     private Button _startButton = null;
 
     [SerializeField]
-    private NumbersRenderer _score = null;
+    private Text _score = null;
 
     [SerializeField]
     private GameOverPopup _gameOverPopup = null;
@@ -30,7 +30,7 @@ public class UIManager : Singleton<UIManager>
         set
         {
            _newBestScore.SetActive(Manager.Instance.IsBestScore);
-            _score.Value = value;
+            _score.text = value.ToString();
         }
     }
 
@@ -93,6 +93,7 @@ public class UIManager : Singleton<UIManager>
     public void StartButton()
     {
         ShowScore();
+        Manager.Instance.GenerateStartingFloor();
         Manager.Instance.IsPlay = true;
         _title.gameObject.SetActive(false);
         _startButton.gameObject.SetActive(false);
@@ -102,7 +103,7 @@ public class UIManager : Singleton<UIManager>
 	
     public void ShowScore()
     {
-        _score.Value = 0;
+        _score.text = "0";
         _score.gameObject.SetActive(true);
         _newBestScore.SetActive(false);
     }

@@ -30,7 +30,7 @@ public class Floor : MoveObject
     {
         _defaultTopPositionY = _topPipe.transform.localPosition.y;
         _defaultBasePositionY = transform.position.y;
-        floorNumber = Manager.Instance.FloorNumber;
+        //floorNumber = Manager.Instance.FloorNumber;
     }
 
     public void SetHeight(float value)

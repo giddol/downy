@@ -1,16 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameOverPopup : MonoBehaviour
 {
     [SerializeField]
-    private MedalRenderer _medalRenderer = null;
-
+    private Text _score = null;
     [SerializeField]
-    private NumbersRenderer _score = null;
-    [SerializeField]
-    private NumbersRenderer _best = null;
+    private Text _best = null;
 
     [SerializeField]
     private GameObject _newBestScore = null;
@@ -20,9 +18,8 @@ public class GameOverPopup : MonoBehaviour
         gameObject.SetActive(true);
 
         _newBestScore.SetActive(Manager.Instance.IsBestScore);
-        _medalRenderer.Value = Manager.Instance.Score;
-        _score.Value = Manager.Instance.Score;
-        _best.Value = Manager.Instance.BestScore;
+        _score.text = Manager.Instance.Score.ToString();
+        _best.text = Manager.Instance.BestScore.ToString();
 	}
 	
 	// Update is called once per frame
