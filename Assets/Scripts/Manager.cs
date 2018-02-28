@@ -55,6 +55,10 @@ public class Manager : Singleton<Manager> {
                 
 #endif
             }
+            else
+            {
+                _bird.GetComponent<Animator>().SetBool("isTitle", false);
+            }
         }
     }
 
