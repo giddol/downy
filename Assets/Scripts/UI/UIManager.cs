@@ -53,8 +53,9 @@ public class UIManager : Singleton<UIManager>
     {
         if (PlayerPrefs.GetInt("soundSetting") == 1)
             _soundToggle.isOn = true;
-        
-        
+        else
+            _soundToggle.isOn = false;
+
         _title.gameObject.SetActive(false);
         _startButton.gameObject.SetActive(false);
         _score.gameObject.SetActive(false);
@@ -174,9 +175,15 @@ public class UIManager : Singleton<UIManager>
     public void VibToggle()
     {
         if (_vibToggle.isOn)
-            Debug.Log("On");
+        {
+            Manager.Instance.isVibMuted = false;
+            PlayerPrefs.SetInt("vibSetting", 1);
+        }
         else
-            Debug.Log("Off");
+        {
+            Manager.Instance.isVibMuted = true;
+            PlayerPrefs.SetInt("vibSetting", 0);
+        }
     }
 
     public void SoundToggle()

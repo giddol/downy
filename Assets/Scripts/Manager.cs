@@ -50,6 +50,10 @@ public class Manager : Singleton<Manager> {
             if (!_isPlay)
             {
                 UIManager.Instance.InvokeGameOver();
+#if UNITY_ANDROID
+                Vibrate();
+                
+#endif
             }
         }
     }
@@ -103,10 +107,21 @@ public class Manager : Singleton<Manager> {
     private int _bestScore = 0;
     private bool _isBestScore = false;
 
+    public bool isVibMuted = false;
+
     private Vector2 birdVelocity;
 
     private void Start()
     {
+        if (!PlayerPrefs.HasKey("soundSetting"))
+        {
+            PlayerPrefs.SetInt("soundSetting", 1);
+        }
+        if (!PlayerPrefs.HasKey("vibSetting"))
+        {
+            PlayerPrefs.SetInt("vibSetting", 1);
+        }
+
         Init();
         UIManager.Instance.ShowTitle();
         _bestScore = PlayerPrefs.GetInt("_bestScore");
@@ -270,12 +285,11 @@ public class Manager : Singleton<Manager> {
                     _gameOverPopup.gameObject.SetActive(false);
                     Manager.Instance.Replay();
                 }
-                //UIManager.Instance.StartButton();
-            
-                if (Input.touchCount > 0)
-                {
-                    UIManager.Instance.StartButton();
-                }
+
+                //if (Input.touchCount > 0)
+                //{
+                //    UIManager.Instance.StartButton();
+                //}
             }
         }
     }
@@ -342,5 +356,13 @@ public class Manager : Singleton<Manager> {
     void InactiveQuitAlarm()
     {
         QuitAlarm.SetActive(false);
+    }
+
+    void Vibrate()
+    {
+#if UNITY_ANDROID
+        if (!isVibMuted)
+            Handheld.Vibrate();
+#endif
     }
 }
