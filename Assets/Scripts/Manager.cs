@@ -10,6 +10,8 @@ public class Manager : Singleton<Manager> {
     private Pipe _pipe = null;
     [SerializeField]
     private Floor _floor = null;
+    
+    public AudioSource _bgSound = null;
 
     [SerializeField]
     private float _speed = 0.01f;
@@ -28,8 +30,6 @@ public class Manager : Singleton<Manager> {
     public GameObject QuitAlarm = null;
 
     private float _currentTime = 0.0f;
-
-    
 
     private Floor floor = null;
     private float h = 0.0f;
@@ -54,6 +54,7 @@ public class Manager : Singleton<Manager> {
         }
     }
 
+
     public int Score { get { return _score; } set { _score = value; } }
     public int BestScore { get { return _bestScore; } }
 
@@ -70,10 +71,39 @@ public class Manager : Singleton<Manager> {
         }
     }
 
+    public bool IsPause
+    {
+        get
+        {
+            return _isPause;
+        }
+
+        set
+        {
+            _isPause = value;
+        }
+    }
+
+    public Bird Bird
+    {
+        get
+        {
+            return _bird;
+        }
+
+        set
+        {
+            _bird = value;
+        }
+    }
+
+    private bool _isPause = false;
     private bool _isPlay = false;
     private int _score = 0;
     private int _bestScore = 0;
     private bool _isBestScore = false;
+
+    private Vector2 birdVelocity;
 
     private void Start()
     {
@@ -89,6 +119,7 @@ public class Manager : Singleton<Manager> {
     {
         _isBestScore = false;
         _isPlay = false;
+        _isPause = false;
         _score = 0;
         _currentTime = 0.0f;
         floorNumber = 0;
@@ -129,7 +160,19 @@ public class Manager : Singleton<Manager> {
         UIManager.Instance.ShowScore();
     }
 
-
+    public void Pause()
+    {
+        _isPlay = false;
+        _isPause = true;
+        birdVelocity = _bird.GetComponent<Rigidbody2D>().velocity;
+    }
+    
+    public void Resume()
+    {
+        _isPlay = true;
+        _isPause = false;
+        _bird.GetComponent<Rigidbody2D>().velocity = birdVelocity;
+    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -159,10 +202,10 @@ public class Manager : Singleton<Manager> {
                     }
                 }
             }
-            
+
 
             Vector2 moveDir = (Vector2.right * moveHorizontal);
-            
+
 #if UNITY_EDITOR
             h = Input.GetAxis("Horizontal");
             moveDir = (Vector2.right * h);
@@ -173,14 +216,14 @@ public class Manager : Singleton<Manager> {
                 moveForce += moveDir.x;
             }
 
-            
+
 
             //_bird.GetComponent<Rigidbody2D>().velocity = new Vector2(h * Time.deltaTime*10, _bird.GetComponent<Rigidbody2D>().velocity.y);
             //_bird.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, _bird.GetComponent<Rigidbody2D>().velocity.y);
             _bird.GetComponent<Rigidbody2D>().AddForce(moveDir.normalized * Time.deltaTime * 100);
 
             _currentTime += Time.deltaTime;
-            if(_createTime<_currentTime)
+            if (_createTime < _currentTime)
             {
                 _currentTime = 0;
 
@@ -202,7 +245,7 @@ public class Manager : Singleton<Manager> {
                 floor.gameObject.SetActive(true);
                 floor.FloorNumber = floorNumber;
                 _floors.Add(floor);
-                
+
             }
 
             _bird.GameUpdate();
@@ -219,15 +262,20 @@ public class Manager : Singleton<Manager> {
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+            if (!_isPause)
             {
-                _gameOverPopup.gameObject.SetActive(false);
-                Manager.Instance.Replay();
-            //UIManager.Instance.StartButton();
-            }
-            if (Input.touchCount > 0)
-            {
-                UIManager.Instance.StartButton();
+                if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+                {
+
+                    _gameOverPopup.gameObject.SetActive(false);
+                    Manager.Instance.Replay();
+                }
+                //UIManager.Instance.StartButton();
+            
+                if (Input.touchCount > 0)
+                {
+                    UIManager.Instance.StartButton();
+                }
             }
         }
     }

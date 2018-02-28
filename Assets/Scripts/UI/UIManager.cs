@@ -23,6 +23,20 @@ public class UIManager : Singleton<UIManager>
     [SerializeField]
     private GameObject _newBestScore = null;
 
+    [SerializeField]
+    private GameObject _settings = null;
+
+    [SerializeField]
+    private GameObject _settingsButton = null;
+
+    [SerializeField]
+    private Toggle _vibToggle = null;
+
+    [SerializeField]
+    private Toggle _soundToggle = null;
+
+    private GameObject prevScreen = null;
+
     public Text testText = null;
 
     public int Score
@@ -37,11 +51,16 @@ public class UIManager : Singleton<UIManager>
 
     public void Init()
     {
+        if (PlayerPrefs.GetInt("soundSetting") == 1)
+            _soundToggle.isOn = true;
+        
+        
         _title.gameObject.SetActive(false);
         _startButton.gameObject.SetActive(false);
         _score.gameObject.SetActive(false);
         _newBestScore.gameObject.SetActive(false);
         _gameOverPopup.gameObject.SetActive(false);
+        _settings.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -113,5 +132,64 @@ public class UIManager : Singleton<UIManager>
         _gameOverPopup.Show();
         _score.gameObject.SetActive(false);
         _newBestScore.SetActive(false);
+    }
+
+    public void SettingsButton()
+    {
+        Manager.Instance.Pause();
+        _settings.gameObject.SetActive(true);
+        _settingsButton.gameObject.SetActive(false);
+        if (_title.activeSelf)
+        {
+            prevScreen = _title;
+            Manager.Instance.Bird.gameObject.SetActive(false);
+        }
+        else if (_gameOverPopup.gameObject.activeSelf)
+        {
+            prevScreen = _gameOverPopup.gameObject;
+        }
+        else
+        {
+            prevScreen = _score.gameObject;
+        }
+        prevScreen.gameObject.SetActive(false);
+    }
+
+    public void BackButton()
+    {
+        _settings.gameObject.SetActive(false);
+        _settingsButton.gameObject.SetActive(true);
+        prevScreen.gameObject.SetActive(true);
+        if (prevScreen.gameObject == _score.gameObject)
+        {
+            Manager.Instance.Resume();
+        }
+        else
+        {
+            Manager.Instance.Bird.gameObject.SetActive(true);
+            Manager.Instance.IsPause = false;
+        }
+    }
+
+    public void VibToggle()
+    {
+        if (_vibToggle.isOn)
+            Debug.Log("On");
+        else
+            Debug.Log("Off");
+    }
+
+    public void SoundToggle()
+    {
+        if (_soundToggle.isOn)
+        {
+            Manager.Instance._bgSound.mute = false;
+            PlayerPrefs.SetInt("soundSetting", 1);
+        }
+        else
+        {
+            Manager.Instance._bgSound.mute = true;
+            PlayerPrefs.SetInt("soundSetting", 0);
+        }
     }
 }
