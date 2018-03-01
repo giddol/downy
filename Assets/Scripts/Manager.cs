@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum GameState { Title, Play, GameOver, Pause }
 public class Manager : Singleton<Manager> {
-    
-
     [SerializeField]
     private Player _player = null;
 
@@ -34,30 +33,44 @@ public class Manager : Singleton<Manager> {
     private float moveForce;
 
     private List<Floor> _floors = new List<Floor>();
+
+    private int _score = 0;
+    private int _bestScore = 0;
+    private bool _isBestScore = false;
+
+    public bool isVibMuted = false;
+
+    private Vector2 playerVelocity;
+
+    private GameState gameState;
+
     public float Speed { get { return _speed; } }
     public int FloorNumber { get { return floorNumber; } }
-    public bool IsPlay
+    
+    public GameState GameState
     {
-        get { return _isPlay; }
+        get { return gameState; }
         set
         {
-            _isPlay = value;
-
-            if (!_isPlay)
+            gameState = value;
+            switch (gameState)
             {
-                UIManager.Instance.InvokeGameOver();
+                case GameState.Title:
+                        _player.GetComponent<Animator>().SetBool("isTitle", true);
+                    break;
+                case GameState.Play:
+                    if (_player.GetComponent<Animator>().GetBool("isTitle"))
+                        _player.GetComponent<Animator>().SetBool("isTitle", false);
+                    break;
+                case GameState.GameOver:
+                    UIManager.Instance.InvokeGameOver();
 #if UNITY_ANDROID
-                Vibrate();
-                
+                    Vibrate();
 #endif
-            }
-            else
-            {
-                _player.GetComponent<Animator>().SetBool("isTitle", false);
+                    break;
             }
         }
     }
-
 
     public int Score { get { return _score; } set { _score = value; } }
     public int BestScore { get { return _bestScore; } }
@@ -75,19 +88,6 @@ public class Manager : Singleton<Manager> {
         }
     }
 
-    public bool IsPause
-    {
-        get
-        {
-            return _isPause;
-        }
-
-        set
-        {
-            _isPause = value;
-        }
-    }
-
     public Player Player
     {
         get
@@ -101,15 +101,7 @@ public class Manager : Singleton<Manager> {
         }
     }
 
-    private bool _isPause = false;
-    private bool _isPlay = false;
-    private int _score = 0;
-    private int _bestScore = 0;
-    private bool _isBestScore = false;
-
-    public bool isVibMuted = false;
-
-    private Vector2 playerVelocity;
+    
 
     private void Start()
     {
@@ -132,9 +124,8 @@ public class Manager : Singleton<Manager> {
 
     private void Init()
     {
+        GameState = GameState.Title;
         _isBestScore = false;
-        _isPlay = false;
-        _isPause = false;
         _score = 0;
         _currentTime = 0.0f;
         floorNumber = 0;
@@ -170,123 +161,128 @@ public class Manager : Singleton<Manager> {
         Init();
         GenerateStartingFloor();
 
-        _isPlay = true;
+        gameState = GameState.Play;
         UIManager.Instance.ShowScore();
     }
 
     public void Pause()
     {
-        _isPlay = false;
-        _isPause = true;
+        GameState = GameState.Pause;
         playerVelocity = _player.GetComponent<Rigidbody2D>().velocity;
     }
     
     public void Resume()
     {
-        _isPlay = true;
-        _isPause = false;
+        GameState = GameState.Play;
         _player.GetComponent<Rigidbody2D>().velocity = playerVelocity;
+    }
+    public void Resume(GameState state)
+    {
+        GameState = state;
+        if(state == GameState.Title)
+        {
+            Player.gameObject.SetActive(true);
+        }
+        if (state == GameState.Play)
+        {
+            _player.GetComponent<Rigidbody2D>().velocity = playerVelocity;
+        }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        _player.FreezePositionY(!_isPlay);
-        if (_isPlay)
+        _player.FreezePositionY(gameState != GameState.Play);
+        switch(gameState)
         {
-
-            //플레이어 터치 이동
-            if (Input.touchCount > 0)
+            case GameState.Play:
             {
-                Vector2 touchPosition = Input.GetTouch(0).position;
-                if (touchPosition.x > Screen.width / 2)
+                //플레이어 터치 이동
+                if (Input.touchCount > 0)
                 {
-                    moveHorizontal = 1;
-                    if (Input.GetTouch(0).phase == TouchPhase.Ended)
+                    Vector2 touchPosition = Input.GetTouch(0).position;
+                    if (touchPosition.x > Screen.width / 2)
                     {
-                        moveHorizontal = 0f;
+                        moveHorizontal = 1;
+                        if (Input.GetTouch(0).phase == TouchPhase.Ended)
+                        {
+                            moveHorizontal = 0f;
+                        }
+                    }
+                    else
+                    {
+                        moveHorizontal = -1;
+                        if (Input.GetTouch(0).phase == TouchPhase.Ended)
+                        {
+                            moveHorizontal = 0f;
+                        }
                     }
                 }
-                else
-                {
-                    moveHorizontal = -1;
-                    if (Input.GetTouch(0).phase == TouchPhase.Ended)
-                    {
-                        moveHorizontal = 0f;
-                    }
-                }
-            }
 
 
-            Vector2 moveDir = (Vector2.right * moveHorizontal);
+                Vector2 moveDir = (Vector2.right * moveHorizontal);
 
 #if UNITY_EDITOR
-            h = Input.GetAxis("Horizontal");
-            moveDir = (Vector2.right * h);
+                h = Input.GetAxis("Horizontal");
+                moveDir = (Vector2.right * h);
 #endif
 
-            if (_player.GetComponent<Rigidbody2D>().velocity.x == 0)
-            {
-                moveForce += moveDir.x;
-            }
-
-
-
-            //_player.GetComponent<Rigidbody2D>().velocity = new Vector2(h * Time.deltaTime*10, _player.GetComponent<Rigidbody2D>().velocity.y);
-            //_player.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, _player.GetComponent<Rigidbody2D>().velocity.y);
-            _player.GetComponent<Rigidbody2D>().AddForce(moveDir.normalized * Time.deltaTime * 100);
-
-            _currentTime += Time.deltaTime;
-            if (_createTime < _currentTime)
-            {
-                _currentTime = 0;
-
-
-                floorNumber++;
-                if (floorNumber > 30)
+                if (_player.GetComponent<Rigidbody2D>().velocity.x == 0)
                 {
-                    _createTime = 2.0f;
-                    floor = GameObject.Instantiate(Resources.Load<Floor>("Floor2"));
-                    floor.gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
+                    moveForce += moveDir.x;
                 }
-                else
+
+
+
+                //_player.GetComponent<Rigidbody2D>().velocity = new Vector2(h * Time.deltaTime*10, _player.GetComponent<Rigidbody2D>().velocity.y);
+                //_player.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, _player.GetComponent<Rigidbody2D>().velocity.y);
+                _player.GetComponent<Rigidbody2D>().AddForce(moveDir.normalized * Time.deltaTime * 100);
+
+                _currentTime += Time.deltaTime;
+                if (_createTime < _currentTime)
                 {
-                    floor = GameObject.Instantiate(Resources.Load<Floor>("Floor"));
+                    _currentTime = 0;
+
+
+                    floorNumber++;
+                    if (floorNumber > 30)
+                    {
+                        _createTime = 2.0f;
+                        floor = GameObject.Instantiate(Resources.Load<Floor>("Floor2"));
+                        floor.gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
+                    }
+                    else
+                    {
+                        floor = GameObject.Instantiate(Resources.Load<Floor>("Floor"));
+                    }
+                    floor.SetPositionX(Random.Range(-0.388f, 0.381f));
+                    floor.gameObject.SetActive(true);
+                    floor.FloorNumber = floorNumber;
+                    _floors.Add(floor);
+
                 }
-                floor.SetPositionX(Random.Range(-0.388f, 0.381f));
-                floor.gameObject.SetActive(true);
-                floor.FloorNumber = floorNumber;
-                _floors.Add(floor);
 
-            }
+                _player.GameUpdate();
 
-            _player.GameUpdate();
-
-            _floors.ForEach((x) =>
-            {
-                x.GameUpdate();
-                if (x.IsNeedInvokeScoreCheck(_player.transform.position))
+                _floors.ForEach((x) =>
                 {
+                    x.GameUpdate();
+                    if (x.IsNeedInvokeScoreCheck(_player.transform.position))
+                    {
                     //InvokeScore();
                 }
-            });
-
-        }
-        else
-        {
-            if (!_isPause)
+                });
+                break;
+            }
+            case GameState.GameOver:
             {
                 if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
                 {
 
                     _gameOverPopup.gameObject.SetActive(false);
-                    Manager.Instance.Replay();
+                    Replay();
                 }
-
-                //if (Input.touchCount > 0)
-                //{
-                //    UIManager.Instance.StartButton();
-                //}
+                break;
             }
         }
     }

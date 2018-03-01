@@ -1022,13 +1022,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 1778793193}
-  _pipe: {fileID: 0}
   _floor: {fileID: 1041858739}
   _bgSound: {fileID: 1028092316}
   _speed: 0.01
   _createTime: 1.5
-  _pipeRandomHeight: 0.6
-  _pipeRandomPostionY: 0.5
   floorNumber: 0
   _gameOverPopup: {fileID: 983389175}
   QuitAlarm: {fileID: 1598727560}
@@ -2923,7 +2920,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 1778793192}
-  _jumpValue: 15
 --- !u!1 &1796628185
 GameObject:
   m_ObjectHideFlags: 0

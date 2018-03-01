@@ -46,7 +46,7 @@ public class Player : MonoBehaviour, IGameObject {
 
         if(this.transform.position.y > 1.08 || this.transform.position.y < -1.08)
         {
-            Manager.Instance.IsPlay = false;
+            Manager.Instance.GameState = GameState.GameOver;
         }
 
     }

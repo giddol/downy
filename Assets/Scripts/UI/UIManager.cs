@@ -36,6 +36,7 @@ public class UIManager : Singleton<UIManager>
     private Toggle _soundToggle = null;
 
     private GameObject prevScreen = null;
+    private GameState prevGameState;
 
     public Text testText = null;
 
@@ -115,7 +116,7 @@ public class UIManager : Singleton<UIManager>
     {
         ShowScore();
         Manager.Instance.GenerateStartingFloor();
-        Manager.Instance.IsPlay = true;
+        Manager.Instance.GameState = GameState.Play;
         _title.gameObject.SetActive(false);
         _startButton.gameObject.SetActive(false);
 
@@ -138,22 +139,25 @@ public class UIManager : Singleton<UIManager>
 
     public void SettingsButton()
     {
-        Manager.Instance.Pause();
-        _settings.gameObject.SetActive(true);
-        _settingsButton.gameObject.SetActive(false);
         if (_title.activeSelf)
         {
             prevScreen = _title;
+            prevGameState = GameState.Title;
             Manager.Instance.Player.gameObject.SetActive(false);
         }
         else if (_gameOverPopup.gameObject.activeSelf)
         {
+            prevGameState = GameState.GameOver;
             prevScreen = _gameOverPopup.gameObject;
         }
-        else
+        else if(Manager.Instance.GameState == GameState.Play)
         {
+            prevGameState = GameState.Play;
             prevScreen = _score.gameObject;
         }
+        Manager.Instance.Pause();
+        _settings.gameObject.SetActive(true);
+        _settingsButton.gameObject.SetActive(false);
         prevScreen.gameObject.SetActive(false);
     }
 
@@ -162,15 +166,7 @@ public class UIManager : Singleton<UIManager>
         _settings.gameObject.SetActive(false);
         _settingsButton.gameObject.SetActive(true);
         prevScreen.gameObject.SetActive(true);
-        if (prevScreen.gameObject == _score.gameObject)
-        {
-            Manager.Instance.Resume();
-        }
-        else
-        {
-            Manager.Instance.Player.gameObject.SetActive(true);
-            Manager.Instance.IsPause = false;
-        }
+        Manager.Instance.Resume(prevGameState);
     }
 
     public void VibToggle()
