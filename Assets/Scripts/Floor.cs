@@ -30,7 +30,6 @@ public class Floor : MoveObject
     {
         _defaultTopPositionY = _topPipe.transform.localPosition.y;
         _defaultBasePositionY = transform.position.y;
-        //floorNumber = Manager.Instance.FloorNumber;
     }
 
     public void SetHeight(float value)
@@ -65,7 +64,7 @@ public class Floor : MoveObject
         Manager.Instance.Remove(this);
     }
 
-    //Bird와 위치를 검사하는 처리
+    //Player와 위치를 검사하는 처리
     public bool IsNeedInvokeScoreCheck(Vector3 target)
     {
         if (!_isCheck)

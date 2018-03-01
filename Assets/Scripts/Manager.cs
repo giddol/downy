@@ -4,10 +4,11 @@ using System.Linq;
 using UnityEngine;
 
 public class Manager : Singleton<Manager> {
+    
+
     [SerializeField]
-    private Bird _bird = null;
-    [SerializeField]
-    private Pipe _pipe = null;
+    private Player _player = null;
+
     [SerializeField]
     private Floor _floor = null;
     
@@ -17,10 +18,6 @@ public class Manager : Singleton<Manager> {
     private float _speed = 0.01f;
     [SerializeField]
     private float _createTime = 1.0f;
-    [SerializeField]
-    private float _pipeRandomHeight = 0.4f;
-    [SerializeField]
-    private float _pipeRandomPostionY = 0.5f;
 
     [SerializeField]
     private int floorNumber = 0;
@@ -36,7 +33,6 @@ public class Manager : Singleton<Manager> {
     private float moveHorizontal = 0.0f;
     private float moveForce;
 
-    private List<Pipe> _pipeList = new List<Pipe>();
     private List<Floor> _floors = new List<Floor>();
     public float Speed { get { return _speed; } }
     public int FloorNumber { get { return floorNumber; } }
@@ -57,7 +53,7 @@ public class Manager : Singleton<Manager> {
             }
             else
             {
-                _bird.GetComponent<Animator>().SetBool("isTitle", false);
+                _player.GetComponent<Animator>().SetBool("isTitle", false);
             }
         }
     }
@@ -92,16 +88,16 @@ public class Manager : Singleton<Manager> {
         }
     }
 
-    public Bird Bird
+    public Player Player
     {
         get
         {
-            return _bird;
+            return _player;
         }
 
         set
         {
-            _bird = value;
+            _player = value;
         }
     }
 
@@ -113,7 +109,7 @@ public class Manager : Singleton<Manager> {
 
     public bool isVibMuted = false;
 
-    private Vector2 birdVelocity;
+    private Vector2 playerVelocity;
 
     private void Start()
     {
@@ -142,8 +138,7 @@ public class Manager : Singleton<Manager> {
         _score = 0;
         _currentTime = 0.0f;
         floorNumber = 0;
-        _bird.Init();
-        _pipeList.ToArray().ToList().ForEach(x => Remove(x));
+        _player.Init();
         _floors.ToArray().ToList().ForEach(x => Remove(x));
 
         UIManager.Instance.Init();
@@ -183,20 +178,20 @@ public class Manager : Singleton<Manager> {
     {
         _isPlay = false;
         _isPause = true;
-        birdVelocity = _bird.GetComponent<Rigidbody2D>().velocity;
+        playerVelocity = _player.GetComponent<Rigidbody2D>().velocity;
     }
     
     public void Resume()
     {
         _isPlay = true;
         _isPause = false;
-        _bird.GetComponent<Rigidbody2D>().velocity = birdVelocity;
+        _player.GetComponent<Rigidbody2D>().velocity = playerVelocity;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        _bird.FreezePositionY(!_isPlay);
+        _player.FreezePositionY(!_isPlay);
         if (_isPlay)
         {
 
@@ -230,25 +225,23 @@ public class Manager : Singleton<Manager> {
             moveDir = (Vector2.right * h);
 #endif
 
-            if (_bird.GetComponent<Rigidbody2D>().velocity.x == 0)
+            if (_player.GetComponent<Rigidbody2D>().velocity.x == 0)
             {
                 moveForce += moveDir.x;
             }
 
 
 
-            //_bird.GetComponent<Rigidbody2D>().velocity = new Vector2(h * Time.deltaTime*10, _bird.GetComponent<Rigidbody2D>().velocity.y);
-            //_bird.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, _bird.GetComponent<Rigidbody2D>().velocity.y);
-            _bird.GetComponent<Rigidbody2D>().AddForce(moveDir.normalized * Time.deltaTime * 100);
+            //_player.GetComponent<Rigidbody2D>().velocity = new Vector2(h * Time.deltaTime*10, _player.GetComponent<Rigidbody2D>().velocity.y);
+            //_player.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, _player.GetComponent<Rigidbody2D>().velocity.y);
+            _player.GetComponent<Rigidbody2D>().AddForce(moveDir.normalized * Time.deltaTime * 100);
 
             _currentTime += Time.deltaTime;
             if (_createTime < _currentTime)
             {
                 _currentTime = 0;
 
-                //_pipe.SetHeight(Random.Range(0.0f, _pipeRandomHeight));
-                //_pipe.SetPositionY(Random.Range(0.0f, _pipeRandomPostionY));
-                //_pipeList.Add(GameObject.Instantiate(_pipe));
+
                 floorNumber++;
                 if (floorNumber > 30)
                 {
@@ -267,12 +260,12 @@ public class Manager : Singleton<Manager> {
 
             }
 
-            _bird.GameUpdate();
+            _player.GameUpdate();
 
             _floors.ForEach((x) =>
             {
                 x.GameUpdate();
-                if (x.IsNeedInvokeScoreCheck(_bird.transform.position))
+                if (x.IsNeedInvokeScoreCheck(_player.transform.position))
                 {
                     //InvokeScore();
                 }
@@ -316,12 +309,6 @@ public class Manager : Singleton<Manager> {
                 Invoke("InactiveQuitAlarm", 3.0f);
             }
         }
-    }
-
-    public void Remove(Pipe target)
-    {
-        _pipeList.Remove(target);
-        Destroy(target.gameObject);
     }
 
     public void Remove(Floor target)

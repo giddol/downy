@@ -110,6 +110,7 @@ public class UIManager : Singleton<UIManager>
         _startButton.gameObject.SetActive(true);
     }
 
+    
     public void StartButton()
     {
         ShowScore();
@@ -143,7 +144,7 @@ public class UIManager : Singleton<UIManager>
         if (_title.activeSelf)
         {
             prevScreen = _title;
-            Manager.Instance.Bird.gameObject.SetActive(false);
+            Manager.Instance.Player.gameObject.SetActive(false);
         }
         else if (_gameOverPopup.gameObject.activeSelf)
         {
@@ -167,7 +168,7 @@ public class UIManager : Singleton<UIManager>
         }
         else
         {
-            Manager.Instance.Bird.gameObject.SetActive(true);
+            Manager.Instance.Player.gameObject.SetActive(true);
             Manager.Instance.IsPause = false;
         }
     }
