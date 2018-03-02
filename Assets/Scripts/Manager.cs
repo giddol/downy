@@ -118,8 +118,6 @@ public class Manager : Singleton<Manager> {
         UIManager.Instance.ShowTitle();
         _bestScore = PlayerPrefs.GetInt("_bestScore");
 
-        for (int i = 0; i < 10; i++)
-            Debug.Log(Random.Range(0, 100));
     }
 
     private void Init()

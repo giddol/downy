@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 using UnityEngine.UI;
-using Firebase.Auth;
 
 public class Login : MonoBehaviour
 {
@@ -12,50 +15,35 @@ public class Login : MonoBehaviour
     public InputField inputTextPassword;
     public Text loginResult;
 
-
-
-    FirebaseAuth auth;
-    void Awake()
+    public bool bLogin
     {
-        // cho gi hwa
-        auth = FirebaseAuth.DefaultInstance;
+        get;
+        set;
     }
-
-
-    // button function
-    public void JoinBtnOnClick()
+    void Start()
     {
-        email = inputTextEmail.text;
-        password = inputTextPassword.text;
-
-        Debug.Log("email: " + email + ", password: " + password);
-
-        CreateUser();
+        InitGPGS();
+        LoginGPGS();
     }
-
-
-    void CreateUser()
+    public void InitGPGS()
     {
-        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
-            if (task.IsCanceled)
-            {
-                Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
-                loginResult.text = "fail";
-                return;
-            }
-            if (task.IsFaulted)
-            {
-                Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
-                loginResult.text = "fail";
-                return;
-            }
+        bLogin = false;
+        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().Build();
+        PlayGamesPlatform.InitializeInstance(config);
+        PlayGamesPlatform.DebugLogEnabled = false;
 
-            // Firebase user has been created.
-            Firebase.Auth.FirebaseUser newUser = task.Result;
-            Debug.LogFormat("Firebase user created successfully: {0} ({1})",
-                newUser.DisplayName, newUser.UserId);
-
-            loginResult.text = "good";
-        });
+        PlayGamesPlatform.Activate();
+    }
+    public void LoginGPGS()
+    {
+        if (!Social.localUser.authenticated)
+        {
+            Social.localUser.Authenticate(LoginCallbackGPGS);
+        }
+    }
+    public void LoginCallbackGPGS(bool result)
+    {
+        bLogin = result;
+        loginResult.text = bLogin.ToString();
     }
 }

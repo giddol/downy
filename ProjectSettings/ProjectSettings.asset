@@ -164,7 +164,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.bootbug.test_180301
   buildNumber: {}
-  AndroidBundleVersionCode: 2
+  AndroidBundleVersionCode: 5
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -247,7 +247,7 @@ PlayerSettings:
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: D:/yong/project/downy/user.keystore
+  AndroidKeystoreName: E:/github/downy/user.keystore
   AndroidKeyaliasName: test_180301
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
@@ -645,9 +645,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 5f156f2d-486f-48e9-a1b1-f2e0ca60d9ee
-  projectName: downy
-  organizationId: choyongjai
+  cloudProjectId: 
+  projectName: 
+  organizationId: 
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
