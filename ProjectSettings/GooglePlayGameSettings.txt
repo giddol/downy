@@ -5,5 +5,5 @@ and.BundleId=com.bootbug.test_180301
 proj.classDir=Assets
 proj.ConstantsClassName=GPGSIds
 and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0a%3c%21--%0d%0aGoogle+Play+game+services+IDs.%0d%0aSave+this+file+as+res%2fvalues%2fgames-ids.xml+in+your+project.%0d%0a--%3e%0d%0a%3cresources%3e%0d%0a++%3c%21--+app_id+--%3e%0d%0a++%3cstring+name%3d%22app_id%22+translatable%3d%22false%22%3e595741762875%3c%2fstring%3e%0d%0a++%3c%21--+package_name+--%3e%0d%0a++%3cstring+name%3d%22package_name%22+translatable%3d%22false%22%3ecom.bootbug.test_180301%3c%2fstring%3e%0d%0a++%3c%21--+achievement+eee+--%3e%0d%0a++%3cstring+name%3d%22achievement_eee%22+translatable%3d%22false%22%3eCgkIu8rnp6sREAIQAQ%3c%2fstring%3e%0d%0a++%3c%21--+achievement+dqwdqwd+--%3e%0d%0a++%3cstring+name%3d%22achievement_dqwdqwd%22+translatable%3d%22false%22%3eCgkIu8rnp6sREAIQAw%3c%2fstring%3e%0d%0a%3c%2fresources%3e%0d%0a
-and.ClientId=595741762875-r655jo5950fk1lts9867vqsltsb18lr1.apps.googleusercontent.com
+and.ClientId=595741762875-gvonem2tija202smua7i8p32u8cauib0.apps.googleusercontent.com
 android.SetupDone=true
