@@ -6,6 +6,7 @@ using GooglePlayGames.BasicApi;
 using Firebase.Auth;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Facebook.Unity;
 
 public class Login : MonoBehaviour
 {
@@ -28,6 +29,18 @@ public class Login : MonoBehaviour
         auth.StateChanged += AuthStateChanged;
         AuthStateChanged(this, null);
         loginResult.text = "after auth";
+
+        //페북 init
+        if (!FB.IsInitialized)
+        {
+            // Initialize the Facebook SDK
+            FB.Init(InitCallback, OnHideUnity);
+        }
+        else
+        {
+            // Already initialized, signal an app activation App Event
+            FB.ActivateApp();
+        }
     }
 
 
@@ -121,15 +134,94 @@ public class Login : MonoBehaviour
         }
     }
 
+    public void FacebookLoginBtnOnClick()
+    {
+        loginResult.text = "페북 로그인 중";
+        
+
+        var perms = new List<string>() { "public_profile", "email", "user_friends" };
+        FB.LogInWithReadPermissions(perms, AuthCallback);
+
+        
+    }
+
+    private void AuthCallback(ILoginResult result)
+    {
+        if (FB.IsLoggedIn)
+        {
+            // AccessToken class will have session details
+            var aToken = Facebook.Unity.AccessToken.CurrentAccessToken;
+            // Print current access token's User ID
+            Debug.Log(aToken.UserId);
+            // Print current access token's granted permissions
+            foreach (string perm in aToken.Permissions)
+            {
+                Debug.Log(perm);
+            }
+
+            Firebase.Auth.Credential credential = Firebase.Auth.FacebookAuthProvider.GetCredential(aToken.TokenString);
+            auth.SignInWithCredentialAsync(credential).ContinueWith(task => {
+                if (task.IsCanceled)
+                {
+                    Debug.LogError("SignInWithCredentialAsync was canceled.");
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("SignInWithCredentialAsync encountered an error: " + task.Exception);
+                    return;
+                }
+
+                Firebase.Auth.FirebaseUser newUser = task.Result;
+                Debug.LogFormat("User signed in successfully: {0} ({1})",
+                    newUser.DisplayName, newUser.UserId);
+            });
+        }
+        else
+        {
+            Debug.Log("User cancelled login");
+        }
+    }
+
+    private void InitCallback()
+    {
+        if (FB.IsInitialized)
+        {
+            // Signal an app activation App Event
+            FB.ActivateApp();
+            // Continue with Facebook SDK
+            // ...
+        }
+        else
+        {
+            Debug.Log("Failed to Initialize the Facebook SDK");
+        }
+    }
+
+    private void OnHideUnity(bool isGameShown)
+    {
+        if (!isGameShown)
+        {
+            // Pause the game - we will need to hide
+            Time.timeScale = 0;
+        }
+        else
+        {
+            // Resume the game - we're getting focus again
+            Time.timeScale = 1;
+        }
+    }
+
     public void GoogleLoginBtnOnClick()
     {
+        loginResult.text = "구글 로그인 중";
         GooglePlayServiceInitialize();
 
         Social.localUser.Authenticate(success =>
         {
             if (success == false) return;
 
-            StartCoroutine(coLogin());
+            StartCoroutine(coGoogleLogin());
         });
 
     }
@@ -145,7 +237,7 @@ public class Login : MonoBehaviour
         PlayGamesPlatform.Activate();
     }
 
-    IEnumerator coLogin()
+    IEnumerator coGoogleLogin()
     {
         while (System.String.IsNullOrEmpty(((PlayGamesLocalUser)Social.localUser).GetIdToken()))
             yield return null;

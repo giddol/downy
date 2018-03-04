@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Firebase.Auth;
 
 public enum GameState { Title, Play, GameOver, Pause }
 public class Manager : Singleton<Manager> {
@@ -292,6 +293,7 @@ public class Manager : Singleton<Manager> {
         {
             if (QuitAlarm.activeSelf)
             {
+                FirebaseAuth.DefaultInstance.SignOut();
                 Application.Quit();
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
