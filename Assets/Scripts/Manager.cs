@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Firebase.Auth;
+using Facebook.Unity;
 
 public enum GameState { Title, Play, GameOver, Pause }
+
+
+
 public class Manager : Singleton<Manager> {
     [SerializeField]
     private Player _player = null;
@@ -65,11 +69,41 @@ public class Manager : Singleton<Manager> {
                     break;
                 case GameState.GameOver:
                     UIManager.Instance.InvokeGameOver();
+                    FB.ShareLink(
+                        new System.Uri("https://developers.facebook.com/"),
+                        callback: ShareCallback
+                    );
 #if UNITY_ANDROID
                     Vibrate();
 #endif
                     break;
             }
+        }
+    }
+
+    private void writeNewUser(string userId, string name, string email)
+    {
+        User user = new User(name, email);
+        string json = JsonUtility.ToJson(user);
+
+        //FirebaseAuth.DefaultInstance.reference.Child("users").Child(userId).SetRawJsonValueAsync(json);
+    }
+
+    private void ShareCallback(IShareResult result)
+    {
+        if (result.Cancelled || !System.String.IsNullOrEmpty(result.Error))
+        {
+            Debug.Log("ShareLink Error: " + result.Error);
+        }
+        else if (!System.String.IsNullOrEmpty(result.PostId))
+        {
+            // Print post identifier of the shared content
+            Debug.Log(result.PostId);
+        }
+        else
+        {
+            // Share succeeded without postID
+            Debug.Log("ShareLink success!");
         }
     }
 

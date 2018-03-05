@@ -4,6 +4,9 @@ using UnityEngine;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using Firebase.Auth;
+using Firebase;
+using Firebase.Database;
+using Firebase.Unity.Editor;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Facebook.Unity;
@@ -29,7 +32,7 @@ public class Login : MonoBehaviour
         auth.StateChanged += AuthStateChanged;
         AuthStateChanged(this, null);
         loginResult.text = "after auth";
-
+        
         //페북 init
         if (!FB.IsInitialized)
         {
@@ -42,7 +45,6 @@ public class Login : MonoBehaviour
             FB.ActivateApp();
         }
     }
-
 
     // 버튼이 눌리면 실행할 함수.
     public void JoinBtnOnClick()
@@ -267,38 +269,6 @@ public class Login : MonoBehaviour
 
         });
     }
-
-    //public bool bLogin
-    //{
-    //    get;
-    //    set;
-    //}
-    //void Start()
-    //{
-    //    InitGPGS();
-    //    LoginGPGS();
-    //}
-    //public void InitGPGS()
-    //{
-    //    bLogin = false;
-    //    PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().Build();
-    //    PlayGamesPlatform.InitializeInstance(config);
-    //    PlayGamesPlatform.DebugLogEnabled = false;
-
-    //    PlayGamesPlatform.Activate();
-    //}
-    //public void LoginGPGS()
-    //{
-    //    if (!Social.localUser.authenticated)
-    //    {
-    //        Social.localUser.Authenticate(LoginCallbackGPGS);
-    //    }
-    //}
-    //public void LoginCallbackGPGS(bool result)
-    //{
-    //    bLogin = result;
-    //    loginResult.text = bLogin.ToString();
-    //}
 
     public void OnSuccesLogin()
     {
