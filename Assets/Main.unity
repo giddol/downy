@@ -649,7 +649,7 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 202898464}
-  toggleTransition: 0
+  toggleTransition: 1
   graphic: {fileID: 1589198085}
   m_Group: {fileID: 0}
   onValueChanged:
@@ -5069,6 +5069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 1778793192}
+  animator: {fileID: 1778793188}
 --- !u!1 &1796628185
 GameObject:
   m_ObjectHideFlags: 0
@@ -5692,7 +5693,7 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 2016873600}
-  toggleTransition: 0
+  toggleTransition: 1
   graphic: {fileID: 261787525}
   m_Group: {fileID: 0}
   onValueChanged:

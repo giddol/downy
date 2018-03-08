@@ -141,7 +141,6 @@ public class UIManager : Singleton<UIManager>
         {
             prevScreen = _title;
             prevGameState = GameState.Title;
-            Manager.Instance.Player.gameObject.SetActive(false);
         }
         else if (_gameOverPopup.gameObject.activeSelf)
         {

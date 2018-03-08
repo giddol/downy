@@ -169,7 +169,6 @@ public class Heart : Singleton<Heart> {
         //    currentHeart = (int)databaseReference.Child("users").Child(user.UserId).Child("heart").GetValueAsync().Result.Value;
         //else
         //    currentHeart = 0;
-        Debug.Log(currentHeart);
         if (currentHeart <= 0)
             return false;
 

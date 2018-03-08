@@ -32,9 +32,6 @@ public class Manager : Singleton<Manager> {
     private float _currentTime = 0.0f;
 
     private Floor floor = null;
-    private float h = 0.0f;
-    private float moveHorizontal = 0.0f;
-    private float moveForce;
 
     private List<Floor> _floors = new List<Floor>();
 
@@ -61,13 +58,14 @@ public class Manager : Singleton<Manager> {
             switch (gameState)
             {
                 case GameState.Title:
-                        _player.GetComponent<Animator>().SetBool("isTitle", true);
+                    _player.State = PlayerState.Twinkle;
                     break;
                 case GameState.Play:
-                    if (_player.GetComponent<Animator>().GetBool("isTitle"))
-                        _player.GetComponent<Animator>().SetBool("isTitle", false);
+                    _player.State = PlayerState.Play;
                     break;
                 case GameState.GameOver:
+                    Vibrate();
+                    _player.State = PlayerState.Stop;
                     UIManager.Instance.InvokeGameOver();
                     break;
             }
@@ -117,21 +115,6 @@ public class Manager : Singleton<Manager> {
             _isBestScore = value;
         }
     }
-
-    public Player Player
-    {
-        get
-        {
-            return _player;
-        }
-
-        set
-        {
-            _player = value;
-        }
-    }
-
-    
 
     private void Start()
     {
@@ -202,81 +185,21 @@ public class Manager : Singleton<Manager> {
     public void Pause()
     {
         GameState = GameState.Pause;
-        playerVelocity = _player.GetComponent<Rigidbody2D>().velocity;
+        _player.State = PlayerState.Pause;
     }
     
-    public void Resume()
-    {
-        GameState = GameState.Play;
-        _player.GetComponent<Rigidbody2D>().velocity = playerVelocity;
-    }
     public void Resume(GameState state)
     {
         GameState = state;
-        if(state == GameState.Title)
-        {
-            Player.gameObject.SetActive(true);
-        }
-        if (state == GameState.Play)
-        {
-            _player.GetComponent<Rigidbody2D>().velocity = playerVelocity;
-        }
+        _player.State = PlayerState.Resume;
     }
-
-    
-
-    
-
-    
 
     void FixedUpdate()
     {
-        _player.FreezePositionY(gameState != GameState.Play);
         switch(gameState)
         {
             case GameState.Play:
             {
-                //플레이어 터치 이동
-                if (Input.touchCount > 0)
-                {
-                    Vector2 touchPosition = Input.GetTouch(0).position;
-                    if (touchPosition.x > Screen.width / 2)
-                    {
-                        moveHorizontal = 1;
-                        if (Input.GetTouch(0).phase == TouchPhase.Ended)
-                        {
-                            moveHorizontal = 0f;
-                        }
-                    }
-                    else
-                    {
-                        moveHorizontal = -1;
-                        if (Input.GetTouch(0).phase == TouchPhase.Ended)
-                        {
-                            moveHorizontal = 0f;
-                        }
-                    }
-                }
-
-
-                Vector2 moveDir = (Vector2.right * moveHorizontal);
-
-#if UNITY_EDITOR
-                h = Input.GetAxis("Horizontal");
-                moveDir = (Vector2.right * h);
-#endif
-
-                if (_player.GetComponent<Rigidbody2D>().velocity.x == 0)
-                {
-                    moveForce += moveDir.x;
-                }
-
-
-
-                //_player.GetComponent<Rigidbody2D>().velocity = new Vector2(h * Time.deltaTime*10, _player.GetComponent<Rigidbody2D>().velocity.y);
-                //_player.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, _player.GetComponent<Rigidbody2D>().velocity.y);
-                _player.GetComponent<Rigidbody2D>().AddForce(moveDir.normalized * Time.deltaTime * 100);
-
                 _currentTime += Time.deltaTime;
                 if (_createTime < _currentTime)
                 {
