@@ -135,7 +135,6 @@ public class Manager : Singleton<Manager> {
 
     private void Start()
     {
-        Time.timeScale = 0;
         if (!PlayerPrefs.HasKey("soundSetting"))
         {
             PlayerPrefs.SetInt("soundSetting", 1);
