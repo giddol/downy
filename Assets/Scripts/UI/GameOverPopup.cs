@@ -24,7 +24,11 @@ public class GameOverPopup : MonoBehaviour
 	
 	// Update is called once per frame
 	public void OkButton () {
-        gameObject.SetActive(false);
         Manager.Instance.Replay();
 	}
+
+    public void FbShare()
+    {
+        Manager.Instance.FbShare();
+    }
 }

@@ -10,6 +10,7 @@ public class User
 {
     public string username;
     public string email;
+    public string UserId;
 
     public User()
     {
@@ -22,9 +23,11 @@ public class User
     }
 }
 
-public class FireBaseDBManger : MonoBehaviour {
+public class FireBaseDBManager : Singleton<FireBaseDBManager>
+{
     private DatabaseReference databaseReference;
-
+    private FirebaseUser user;
+    public UnityEngine.UI.Text text;
     // Use this for initialization
     void Start () {
         // Set these values before calling into the realtime database.
@@ -32,13 +35,11 @@ public class FireBaseDBManger : MonoBehaviour {
         FirebaseApp.DefaultInstance.SetEditorP12FileName("downy-test-74f7c5fd86e9.p12");
         FirebaseApp.DefaultInstance.SetEditorServiceAccountEmail("test-748@down-d257e.iam.gserviceaccount.com");
         FirebaseApp.DefaultInstance.SetEditorP12Password("notasecret");
-
         // Get the root reference location of the database.
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
 
-        FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
-
-        WriteNewUser(user.UserId, user.DisplayName, user.Email);
+        user = FirebaseAuth.DefaultInstance.CurrentUser;
+        //WriteNewUser(user.UserId, user.DisplayName, user.Email);
     }
 
     private void WriteNewUser(string userId, string name, string email)
@@ -50,9 +51,4 @@ public class FireBaseDBManger : MonoBehaviour {
 
         Debug.Log("업데이트 완료");
     }
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
 }

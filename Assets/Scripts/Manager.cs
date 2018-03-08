@@ -8,7 +8,6 @@ using Facebook.Unity;
 public enum GameState { Title, Play, GameOver, Pause }
 
 
-
 public class Manager : Singleton<Manager> {
     [SerializeField]
     private Player _player = null;
@@ -49,6 +48,7 @@ public class Manager : Singleton<Manager> {
 
     private GameState gameState;
 
+
     public float Speed { get { return _speed; } }
     public int FloorNumber { get { return floorNumber; } }
     
@@ -69,24 +69,17 @@ public class Manager : Singleton<Manager> {
                     break;
                 case GameState.GameOver:
                     UIManager.Instance.InvokeGameOver();
-                    FB.ShareLink(
-                        new System.Uri("https://developers.facebook.com/"),
-                        callback: ShareCallback
-                    );
-#if UNITY_ANDROID
-                    Vibrate();
-#endif
                     break;
             }
         }
     }
 
-    private void writeNewUser(string userId, string name, string email)
+    public void FbShare()
     {
-        User user = new User(name, email);
-        string json = JsonUtility.ToJson(user);
-
-        //FirebaseAuth.DefaultInstance.reference.Child("users").Child(userId).SetRawJsonValueAsync(json);
+        FB.ShareLink(
+            new System.Uri("https://developers.facebook.com/"),
+            callback: ShareCallback
+        );
     }
 
     private void ShareCallback(IShareResult result)
@@ -104,6 +97,8 @@ public class Manager : Singleton<Manager> {
         {
             // Share succeeded without postID
             Debug.Log("ShareLink success!");
+
+            Heart.Instance.CurrentHeart += 2;
         }
     }
 
@@ -140,6 +135,7 @@ public class Manager : Singleton<Manager> {
 
     private void Start()
     {
+        Time.timeScale = 0;
         if (!PlayerPrefs.HasKey("soundSetting"))
         {
             PlayerPrefs.SetInt("soundSetting", 1);
@@ -149,15 +145,16 @@ public class Manager : Singleton<Manager> {
             PlayerPrefs.SetInt("vibSetting", 1);
         }
 
+        GameState = GameState.Title;
         Init();
         UIManager.Instance.ShowTitle();
+
         _bestScore = PlayerPrefs.GetInt("_bestScore");
 
     }
 
     private void Init()
     {
-        GameState = GameState.Title;
         _isBestScore = false;
         _score = 0;
         _currentTime = 0.0f;
@@ -191,10 +188,15 @@ public class Manager : Singleton<Manager> {
 
     public void Replay()
     {
+        if (!Heart.Instance.TryDecreaseHeart())
+            return;
+
+        _gameOverPopup.gameObject.SetActive(false);
+
         Init();
+        GameState = GameState.Play;
         GenerateStartingFloor();
 
-        gameState = GameState.Play;
         UIManager.Instance.ShowScore();
     }
 
@@ -222,7 +224,12 @@ public class Manager : Singleton<Manager> {
         }
     }
 
-    // Update is called once per frame
+    
+
+    
+
+    
+
     void FixedUpdate()
     {
         _player.FreezePositionY(gameState != GameState.Play);
@@ -311,8 +318,6 @@ public class Manager : Singleton<Manager> {
             {
                 if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
                 {
-
-                    _gameOverPopup.gameObject.SetActive(false);
                     Replay();
                 }
                 break;
@@ -327,11 +332,13 @@ public class Manager : Singleton<Manager> {
         {
             if (QuitAlarm.activeSelf)
             {
+                StopAllCoroutines();
                 FirebaseAuth.DefaultInstance.SignOut();
-                Application.Quit();
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
 #endif
+                Heart.Instance.StopAllCoroutines();
+                Application.Quit();
             }
             else
             {
@@ -374,12 +381,12 @@ public class Manager : Singleton<Manager> {
             UIManager.Instance.testText.text = "업적1 달성";
         }
     }
-    void InactiveQuitAlarm()
+    public void InactiveQuitAlarm()
     {
         QuitAlarm.SetActive(false);
     }
 
-    void Vibrate()
+    public void Vibrate()
     {
 #if UNITY_ANDROID
         if (!isVibMuted)

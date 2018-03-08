@@ -111,13 +111,14 @@ public class UIManager : Singleton<UIManager>
     
     public void StartButton()
     {
+        if (!Heart.Instance.TryDecreaseHeart())
+            return;
+
         ShowScore();
         Manager.Instance.GenerateStartingFloor();
         Manager.Instance.GameState = GameState.Play;
         _title.gameObject.SetActive(false);
         _startButton.gameObject.SetActive(false);
-
-        Social.ShowAchievementsUI();
     }
 	
     public void ShowScore()

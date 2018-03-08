@@ -17,6 +17,7 @@ public class Player : MonoBehaviour, IGameObject {
     {
         transform.position = _startPosition;
         transform.rotation = Quaternion.identity;
+        //_rigidbody.velocity = Vector2.zero;
     }
 
     // Use this for initialization
@@ -46,6 +47,7 @@ public class Player : MonoBehaviour, IGameObject {
 
         if(this.transform.position.y > 1.08 || this.transform.position.y < -1.08)
         {
+            Manager.Instance.Vibrate();
             Manager.Instance.GameState = GameState.GameOver;
         }
 
