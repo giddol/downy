@@ -40,8 +40,6 @@ public class Manager : Singleton<Manager> {
 
     public bool isVibMuted = false;
 
-    private Vector2 playerVelocity;
-
     private GameState gameState;
 
     private MemoryPool pool;
@@ -151,11 +149,13 @@ public class Manager : Singleton<Manager> {
     public void GenerateStartingFloor()
     {
         floor = pool.TakeItem();
+        floor.Init();
         floor.SetPositionY(-0.114f);
         _floors.Add(floor);
 
         floorNumber++;
         floor = pool.TakeItem();
+        floor.Init();
         floor.SetPositionX(Random.Range(-0.388f, 0.381f));
         floor.SetPositionY(-0.75f);
         floor.FloorNumber = floorNumber;
@@ -163,6 +163,7 @@ public class Manager : Singleton<Manager> {
 
         floorNumber++;
         floor = pool.TakeItem();
+        floor.Init();
         floor.SetPositionX(Random.Range(-0.388f, 0.381f));
         floor.SetPositionY(-1.5f);
         floor.FloorNumber = floorNumber;
@@ -177,8 +178,9 @@ public class Manager : Singleton<Manager> {
         _gameOverPopup.gameObject.SetActive(false);
 
         Init();
-        GameState = GameState.Play;
         GenerateStartingFloor();
+        GameState = GameState.Play;
+        
 
         UIManager.Instance.ShowScore();
     }
@@ -229,7 +231,7 @@ public class Manager : Singleton<Manager> {
                     if (x.IsNeedInvokeScoreCheck(_player.transform.position))
                     {
                     //InvokeScore();
-                }
+                    }
                 });
                 break;
             }

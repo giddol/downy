@@ -65,7 +65,7 @@ public class Floor : MoveObject
     public void SetPositionY(float value)
     {
         Vector2 result = transform.position;
-        result.y = value + _defaultBasePositionY;
+        result.y = value;
         transform.position = result;
     }
 
