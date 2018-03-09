@@ -6,6 +6,12 @@ public class Floor : MoveObject
 {
     [SerializeField]
     private GameObject _topPipe = null;
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private BoxCollider2D boxCollider2D;
+    [SerializeField]
+    private PhysicsMaterial2D physicsMaterial2D;
 
     private float _defaultTopPositionY = 0.0f;
     private float _defaultBasePositionY = 0.0f;
@@ -23,6 +29,11 @@ public class Floor : MoveObject
         set
         {
             floorNumber = value;
+            if(floorNumber > Constants.levelTwo)
+            {
+                spriteRenderer.color = new Color(1, 0, 0);
+                boxCollider2D.sharedMaterial = physicsMaterial2D;
+            }
         }
     }
 
@@ -32,6 +43,10 @@ public class Floor : MoveObject
         _defaultBasePositionY = transform.position.y;
     }
 
+    public void Init()
+    {
+        transform.position = new Vector2(0.0f,-1.5f);
+    }
     public void SetHeight(float value)
     {
         Vector2 result = _topPipe.transform.localPosition;

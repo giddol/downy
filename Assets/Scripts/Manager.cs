@@ -5,8 +5,7 @@ using UnityEngine;
 using Firebase.Auth;
 using Facebook.Unity;
 
-public enum GameState { Title, Play, GameOver, Pause }
-
+public enum GameState { Title, Play, GameOver, Pause}
 
 public class Manager : Singleton<Manager> {
     [SerializeField]
@@ -45,6 +44,7 @@ public class Manager : Singleton<Manager> {
 
     private GameState gameState;
 
+    private MemoryPool pool;
 
     public float Speed { get { return _speed; } }
     public int FloorNumber { get { return floorNumber; } }
@@ -118,6 +118,7 @@ public class Manager : Singleton<Manager> {
 
     private void Start()
     {
+        pool = new MemoryPool(_floor, 5, 50);
         if (!PlayerPrefs.HasKey("soundSetting"))
         {
             PlayerPrefs.SetInt("soundSetting", 1);
@@ -149,19 +150,19 @@ public class Manager : Singleton<Manager> {
 
     public void GenerateStartingFloor()
     {
-        floor = GameObject.Instantiate(_floor);
+        floor = pool.TakeItem();
         floor.SetPositionY(-0.114f);
         _floors.Add(floor);
 
         floorNumber++;
-        floor = GameObject.Instantiate(_floor);
+        floor = pool.TakeItem();
         floor.SetPositionX(Random.Range(-0.388f, 0.381f));
         floor.SetPositionY(-0.75f);
         floor.FloorNumber = floorNumber;
         _floors.Add(floor);
 
         floorNumber++;
-        floor = GameObject.Instantiate(_floor);
+        floor = pool.TakeItem();
         floor.SetPositionX(Random.Range(-0.388f, 0.381f));
         floor.SetPositionY(-1.5f);
         floor.FloorNumber = floorNumber;
@@ -207,16 +208,12 @@ public class Manager : Singleton<Manager> {
 
 
                     floorNumber++;
-                    if (floorNumber > 30)
+                    if (floorNumber == Constants.levelTwo)
                     {
                         _createTime = 2.0f;
-                        floor = GameObject.Instantiate(Resources.Load<Floor>("Floor2"));
-                        floor.gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
                     }
-                    else
-                    {
-                        floor = GameObject.Instantiate(Resources.Load<Floor>("Floor"));
-                    }
+                    floor = pool.TakeItem();
+                    floor.Init();
                     floor.SetPositionX(Random.Range(-0.388f, 0.381f));
                     floor.gameObject.SetActive(true);
                     floor.FloorNumber = floorNumber;
@@ -254,12 +251,6 @@ public class Manager : Singleton<Manager> {
         {
             if (QuitAlarm.activeSelf)
             {
-                StopAllCoroutines();
-                FirebaseAuth.DefaultInstance.SignOut();
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#endif
-                Heart.Instance.StopAllCoroutines();
                 Application.Quit();
             }
             else
@@ -273,7 +264,7 @@ public class Manager : Singleton<Manager> {
     public void Remove(Floor target)
     {
         _floors.Remove(target);
-        Destroy(target.gameObject);
+        pool.PutItem(target);
     }
 
     public void UpdateScore(int score)
@@ -314,5 +305,16 @@ public class Manager : Singleton<Manager> {
         if (!isVibMuted)
             Handheld.Vibrate();
 #endif
+    }
+
+    void OnApplicationQuit()
+    {
+        StopAllCoroutines();
+        FirebaseAuth.DefaultInstance.SignOut();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        Heart.Instance.StopAllCoroutines();
+        pool.Dispose(); //메모리 풀 삭제
     }
 }

@@ -128,8 +128,8 @@ public class Player : MonoBehaviour, IGameObject {
         {
             moveForce += moveDir.x;
         }
-        //_player.GetComponent<Rigidbody2D>().velocity = new Vector2(h * Time.deltaTime*10, _player.GetComponent<Rigidbody2D>().velocity.y);
-        //_player.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, _player.GetComponent<Rigidbody2D>().velocity.y);
+        //_rigidbody.velocity = new Vector2(h * Time.deltaTime*10, _rigidbody.velocity.y);
+        //_rigidbody.velocity = new Vector2(0f, _rigidbody.velocity.y);
         _rigidbody.AddForce(moveDir.normalized * Time.deltaTime * 100);
 
         if (this.transform.position.x < -0.482f)

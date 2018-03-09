@@ -157,6 +157,7 @@ public class Heart : Singleton<Heart> {
             if (sec <= 0)
             {
                 TryIncreaseHeartByTime();
+                Debug.Log("TryIncreaseHeartByTime");
             }
 
             yield return new WaitForSecondsRealtime(1);

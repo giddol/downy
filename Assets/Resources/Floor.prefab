@@ -83,6 +83,9 @@ MonoBehaviour:
   _startPositionY: -1
   _endPositionY: 1.1
   _topPipe: {fileID: 1315833902480066}
+  spriteRenderer: {fileID: 212996575447417394}
+  boxCollider2D: {fileID: 61881639114800298}
+  physicsMaterial2D: {fileID: 6200000, guid: da179c12b036d974d8550bcf3ddfcbf0, type: 2}
 --- !u!212 &212996575447417394
 SpriteRenderer:
   m_ObjectHideFlags: 1

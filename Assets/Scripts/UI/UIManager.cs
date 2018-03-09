@@ -62,46 +62,6 @@ public class UIManager : Singleton<UIManager>
         _settings.gameObject.SetActive(false);
     }
 
-    private void Start()
-    {
-		/*
-        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
-            .Build();
-
-        PlayGamesPlatform.InitializeInstance(config);
-
-        PlayGamesPlatform.DebugLogEnabled = true;
-
-        PlayGamesPlatform.Activate();
-
-        
-
-
-        SignIn();
-        */
-    }
-	/*
-    public void SignIn()
-    {
-        testText.text = "왜";
-        PlayGamesPlatform.Instance.Authenticate((bool success) =>
-        {
-            if (success)
-            {
-                StartButton();
-                testText.text = "success";
-                Debug.Log("success");
-            }
-            else
-            {
-                ShowScore();
-                testText.text = "fail";
-                Debug.Log("fail");
-            }
-        });
-        testText.text = "안될까";
-    }
-	*/
     public void ShowTitle()
     {
         _title.gameObject.SetActive(true);
