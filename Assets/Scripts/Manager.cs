@@ -148,26 +148,24 @@ public class Manager : Singleton<Manager> {
 
     public void GenerateStartingFloor()
     {
+        float posY = -0.114f;
         floor = pool.TakeItem();
         floor.Init();
-        floor.SetPositionY(-0.114f);
-        _floors.Add(floor);
-
-        floorNumber++;
-        floor = pool.TakeItem();
-        floor.Init();
-        floor.SetPositionX(Random.Range(-0.388f, 0.381f));
-        floor.SetPositionY(-0.75f);
+        floor.SetPositionY(posY);
         floor.FloorNumber = floorNumber;
         _floors.Add(floor);
 
-        floorNumber++;
-        floor = pool.TakeItem();
-        floor.Init();
-        floor.SetPositionX(Random.Range(-0.388f, 0.381f));
-        floor.SetPositionY(-1.5f);
-        floor.FloorNumber = floorNumber;
-        _floors.Add(floor);
+        while (posY > -1.5f)
+        {
+            posY -= 0.75f;
+            floorNumber++;
+            floor = pool.TakeItem();
+            floor.Init();
+            floor.SetPositionX(Random.Range(-0.388f, 0.381f));
+            floor.SetPositionY(posY);
+            floor.FloorNumber = floorNumber;
+            _floors.Add(floor); 
+        }
     }
 
     public void Replay()

@@ -24,8 +24,6 @@ public class Heart : Singleton<Heart> {
 #else
     private FirebaseUser user;
 #endif
-    private const int CHARGING_TIME = 300;
-    private const int MAX_HEART = 10;
 
     public long CurrentHeart
     {
@@ -36,14 +34,14 @@ public class Heart : Singleton<Heart> {
 
         set
         {
-            if (currentHeart > value && currentHeart == MAX_HEART)
+            if (currentHeart > value && currentHeart == Constants.MAX_HEART)
             {
                 WriteHeartTime();
                 heartTime = System.DateTime.Now;
                 StartCoroutine("HeartTimer");
             }
 
-            if(currentHeart < value && value >= MAX_HEART)
+            if(currentHeart < value && value >= Constants.MAX_HEART)
             {
                 SetChargingTime("MAX");
                 StopCoroutine("HeartTimer");
@@ -62,26 +60,28 @@ public class Heart : Singleton<Heart> {
 #if UNITY_EDITOR
         user = new User("username", "userEmail");
         user.UserId = "userId";
-        databaseReference.Child("users").Child(user.UserId).Child("heart").SetValueAsync(MAX_HEART);
+        databaseReference.Child("users").Child(user.UserId).Child("heart").SetValueAsync(Constants.MAX_HEART);
+        WriteHeartTime();
 #else
         user = FirebaseAuth.DefaultInstance.CurrentUser;
+        
 #endif
         isStart = true;
-
         databaseReference.Child("users").Child(user.UserId).Child("heart").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsFaulted)
             {
                 // Handle the error...
-
             }
             else if (task.IsCompleted)
             {
+
                 DataSnapshot snapshot = task.Result;
-                if(snapshot == null)
+
+                if (snapshot == null)
                 {
-                    databaseReference.Child("users").Child(user.UserId).Child("heart").SetValueAsync(MAX_HEART);
-                    CurrentHeart = MAX_HEART;
+                    databaseReference.Child("users").Child(user.UserId).Child("heart").SetValueAsync(Constants.MAX_HEART);
+                    CurrentHeart = Constants.MAX_HEART;
                     return;
                 }
                 CurrentHeart = (long)snapshot.Value;
@@ -108,28 +108,28 @@ public class Heart : Singleton<Heart> {
                 double dbTime = (double)task.Result.Value;
                 double cTime = (System.DateTime.Now - System.DateTime.MinValue).TotalSeconds;
 
-                if (cTime - dbTime >= CHARGING_TIME)
+                if (cTime - dbTime >= Constants.CHARGING_TIME)
                 {
                     
-                    heartTime = heartTime.AddSeconds(CHARGING_TIME);
-                    SetChargingTime(CHARGING_TIME - (int)(cTime-dbTime)%CHARGING_TIME);
+                    heartTime = heartTime.AddSeconds(Constants.CHARGING_TIME);
+                    SetChargingTime(Constants.CHARGING_TIME - (int)(cTime-dbTime)% Constants.CHARGING_TIME);
 
-                    int f = (int)(cTime - dbTime) / CHARGING_TIME;
+                    int f = (int)(cTime - dbTime) / Constants.CHARGING_TIME;
 
-                    if (currentHeart + f >= MAX_HEART)
-                        CurrentHeart = MAX_HEART;
+                    if (currentHeart + f >= Constants.MAX_HEART)
+                        CurrentHeart = Constants.MAX_HEART;
                     else
                     {
                         CurrentHeart += f;
-                        databaseReference.Child("users").Child(user.UserId).Child("heartTime").SetValueAsync(dbTime + CHARGING_TIME*f);
+                        databaseReference.Child("users").Child(user.UserId).Child("heartTime").SetValueAsync(dbTime + Constants.CHARGING_TIME *f);
                     }
                 }
 
                 if (isStart)
                 {
                     isStart = false;
-                    heartTime = System.DateTime.Now.AddSeconds(-(int)(cTime - dbTime) % CHARGING_TIME);
-                    if (currentHeart < MAX_HEART)
+                    heartTime = System.DateTime.Now.AddSeconds(-(int)(cTime - dbTime) % Constants.CHARGING_TIME);
+                    if (currentHeart < Constants.MAX_HEART)
                         StartCoroutine("HeartTimer");
                 }
             }
@@ -152,7 +152,7 @@ public class Heart : Singleton<Heart> {
         while (true)
         {
             heartTimeSpan = System.DateTime.Now - heartTime;
-            int sec = CHARGING_TIME - (int)heartTimeSpan.TotalSeconds;
+            int sec = Constants.CHARGING_TIME - (int)heartTimeSpan.TotalSeconds;
             SetChargingTime(sec);
             if (sec <= 0)
             {

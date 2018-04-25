@@ -17,6 +17,7 @@ public class Login : MonoBehaviour
     [SerializeField] string email;
     [SerializeField] string password;
 
+    public GameObject block;
     public InputField inputTextEmail;
     public InputField inputTextPassword;
     public Text loginResult;
@@ -49,6 +50,9 @@ public class Login : MonoBehaviour
     // 버튼이 눌리면 실행할 함수.
     public void JoinBtnOnClick()
     {
+        loginResult.text = "회원 가입 중";
+        block.SetActive(true);
+
         email = inputTextEmail.text;
         password = inputTextPassword.text;
 
@@ -77,6 +81,20 @@ public class Login : MonoBehaviour
 
             // Firebase user has been created.
             Firebase.Auth.FirebaseUser newUser = task.Result;
+
+            FirebaseDatabase.DefaultInstance.RootReference.Child(newUser.UserId).GetValueAsync().ContinueWith(task2 =>
+            {
+                DataSnapshot snapshot = task2.Result;
+
+                if (snapshot.Value == null)
+                {
+                    User user = new User(newUser.DisplayName, newUser.Email, newUser.UserId);
+                    string json = JsonUtility.ToJson(user);
+                    FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(user.UserId).SetRawJsonValueAsync(json);
+                }
+            });
+            
+
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
 
@@ -86,6 +104,9 @@ public class Login : MonoBehaviour
 
     public void LoginBtnOnClick()
     {
+        block.SetActive(true);
+        loginResult.text = "일반 로그인 중";
+
         email = inputTextEmail.text;
         password = inputTextPassword.text;
 
@@ -139,7 +160,7 @@ public class Login : MonoBehaviour
     public void FacebookLoginBtnOnClick()
     {
         loginResult.text = "페북 로그인 중";
-        
+        block.SetActive(true);
 
         var perms = new List<string>() { "public_profile", "email", "user_friends" };
         FB.LogInWithReadPermissions(perms, AuthCallback);
@@ -216,6 +237,7 @@ public class Login : MonoBehaviour
 
     public void GoogleLoginBtnOnClick()
     {
+        block.SetActive(true);
         loginResult.text = "구글 로그인 중";
         GooglePlayServiceInitialize();
 
@@ -241,6 +263,7 @@ public class Login : MonoBehaviour
 
     IEnumerator coGoogleLogin()
     {
+        
         while (System.String.IsNullOrEmpty(((PlayGamesLocalUser)Social.localUser).GetIdToken()))
             yield return null;
 
@@ -272,6 +295,7 @@ public class Login : MonoBehaviour
 
     public void OnSuccesLogin()
     {
+        
         SceneManager.LoadScene("Main");
     }
 }

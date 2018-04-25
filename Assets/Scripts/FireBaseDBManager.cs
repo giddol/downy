@@ -11,6 +11,9 @@ public class User
     public string username;
     public string email;
     public string UserId;
+    public int heart;
+    public int bestScore;
+    public string achievements; 
 
     public User()
     {
@@ -20,6 +23,16 @@ public class User
     {
         this.username = username;
         this.email = email;
+    }
+
+    public User(string username, string email, string userId)
+    {
+        this.username = username;
+        this.email = email;
+        UserId = userId;
+        heart = Constants.MAX_HEART;
+        bestScore = 0;
+        achievements = "";
     }
 }
 
@@ -39,6 +52,7 @@ public class FireBaseDBManager : Singleton<FireBaseDBManager>
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
 
         user = FirebaseAuth.DefaultInstance.CurrentUser;
+
         //WriteNewUser(user.UserId, user.DisplayName, user.Email);
     }
 
@@ -51,4 +65,6 @@ public class FireBaseDBManager : Singleton<FireBaseDBManager>
 
         Debug.Log("업데이트 완료");
     }
+
+
 }

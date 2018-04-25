@@ -11,10 +11,11 @@ public class Floor : MoveObject
     [SerializeField]
     private BoxCollider2D boxCollider2D;
     [SerializeField]
-    private PhysicsMaterial2D physicsMaterial2D;
+    private PhysicsMaterial2D phyMaterialLevelTwo;
+    [SerializeField]
+    private PhysicsMaterial2D phyMaterialLevelOne;
 
     private float _defaultTopPositionY = 0.0f;
-    private float _defaultBasePositionY = 0.0f;
     private int floorNumber = 0;
 
     private bool _isCheck = false;
@@ -32,7 +33,12 @@ public class Floor : MoveObject
             if(floorNumber > Constants.levelTwo)
             {
                 spriteRenderer.color = new Color(1, 0, 0);
-                boxCollider2D.sharedMaterial = physicsMaterial2D;
+                boxCollider2D.sharedMaterial = phyMaterialLevelTwo;
+            }
+            else
+            {
+                spriteRenderer.color = new Color(1, 1, 1);
+                boxCollider2D.sharedMaterial = phyMaterialLevelOne;
             }
         }
     }
@@ -40,7 +46,6 @@ public class Floor : MoveObject
     private void Start()
     {
         _defaultTopPositionY = _topPipe.transform.localPosition.y;
-        _defaultBasePositionY = transform.position.y;
     }
 
     public void Init()

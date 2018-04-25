@@ -60,6 +60,7 @@ public class UIManager : Singleton<UIManager>
         _newBestScore.gameObject.SetActive(false);
         _gameOverPopup.gameObject.SetActive(false);
         _settings.gameObject.SetActive(false);
+        
     }
 
     public void ShowTitle()
