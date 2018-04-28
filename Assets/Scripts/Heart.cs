@@ -19,11 +19,8 @@ public class Heart : Singleton<Heart> {
 
     
 
-#if UNITY_EDITOR
-    private User user;
-#else
-    private FirebaseUser user;
-#endif
+
+    public FirebaseUser user;
 
     public long CurrentHeart
     {
@@ -54,19 +51,13 @@ public class Heart : Singleton<Heart> {
         }
     }
 
-    private void Start()
+    public void Init()
     {
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-#if UNITY_EDITOR
-        user = new User("username", "userEmail");
-        user.UserId = "userId";
-        databaseReference.Child("users").Child(user.UserId).Child("heart").SetValueAsync(Constants.MAX_HEART);
-        WriteHeartTime();
-#else
         user = FirebaseAuth.DefaultInstance.CurrentUser;
-        
-#endif
+
         isStart = true;
+        Debug.Log(user);
         databaseReference.Child("users").Child(user.UserId).Child("heart").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsFaulted)

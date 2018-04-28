@@ -310,11 +310,11 @@ public class Manager : Singleton<Manager> {
     void OnApplicationQuit()
     {
         StopAllCoroutines();
-        FirebaseAuth.DefaultInstance.SignOut();
+        //FirebaseAuth.DefaultInstance.SignOut();
+        Heart.Instance.StopAllCoroutines();
+        pool.Dispose(); //메모리 풀 삭제
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
-        Heart.Instance.StopAllCoroutines();
-        pool.Dispose(); //메모리 풀 삭제
     }
 }

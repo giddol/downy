@@ -32,7 +32,18 @@ public class User
         UserId = userId;
         heart = Constants.MAX_HEART;
         bestScore = 0;
-        achievements = "";
+    }
+}
+
+public class Achievements
+{
+    public bool ach1;
+    public bool ach2;
+
+    public Achievements()
+    {
+        ach1 = true;
+        ach2 = false;
     }
 }
 
@@ -41,6 +52,8 @@ public class FireBaseDBManager : Singleton<FireBaseDBManager>
     private DatabaseReference databaseReference;
     private FirebaseUser user;
     public UnityEngine.UI.Text text;
+
+
     // Use this for initialization
     void Start () {
         // Set these values before calling into the realtime database.
@@ -48,11 +61,12 @@ public class FireBaseDBManager : Singleton<FireBaseDBManager>
         FirebaseApp.DefaultInstance.SetEditorP12FileName("downy-test-74f7c5fd86e9.p12");
         FirebaseApp.DefaultInstance.SetEditorServiceAccountEmail("test-748@down-d257e.iam.gserviceaccount.com");
         FirebaseApp.DefaultInstance.SetEditorP12Password("notasecret");
-        // Get the root reference location of the database.
+        //// Get the root reference location of the database.
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-
+#if UNITY_EDITOR
+        CreateUser();
+#endif
         user = FirebaseAuth.DefaultInstance.CurrentUser;
-
         //WriteNewUser(user.UserId, user.DisplayName, user.Email);
     }
 
@@ -66,5 +80,24 @@ public class FireBaseDBManager : Singleton<FireBaseDBManager>
         Debug.Log("업데이트 완료");
     }
 
+    void CreateUser()
+    {
+        FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync().ContinueWith(task =>
+        {
+            Firebase.Auth.FirebaseUser newUser = task.Result;
+            User user = new User(newUser.DisplayName, newUser.Email, newUser.UserId);
+            string json = JsonUtility.ToJson(user);
+            //string json = "{\"username\":\"\",\"email\":\"\",\"UserId\":\"OEJUVPVABO\",\"heart\":10,\"bestScore\":0,\"achievements\":{\"ach1\":true,\"ach2\":false}\"}";
+            Debug.Log(json);
+            FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(user.UserId).SetRawJsonValueAsync(json);
+            Achievements achievements = new Achievements();
+            string jsonAch = JsonUtility.ToJson(achievements);
+            Debug.Log(jsonAch);
+            databaseReference.Child("users").Child(user.UserId).Child("achievements").SetRawJsonValueAsync(jsonAch);
+            Heart.Instance.Init();
+            AchievementsManager.Instance.GetAch();
 
+        });
+        
+    }
 }
