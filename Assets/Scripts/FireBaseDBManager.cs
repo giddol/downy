@@ -47,6 +47,36 @@ public class Achievements
     }
 }
 
+public class Ach
+{
+    public string subject;
+    public string name;
+    public int reqValue;
+    public int currentValue;
+    public int reward;
+    public bool isClear;
+
+    public Ach()
+    {
+        subject = "계단";
+        name = "100계단 달성";
+        reqValue = 5;
+        currentValue = 0;
+        reward = 1000;
+        isClear = false;
+    }
+
+    public Ach(string s, string n, int reqV, int curV, int rw)
+    {
+        subject = s;
+        name = n;
+        reqValue = reqV;
+        currentValue = curV;
+        reward = rw;
+        isClear = false;
+    }
+}
+
 public class FireBaseDBManager : Singleton<FireBaseDBManager>
 {
     private DatabaseReference databaseReference;
@@ -94,8 +124,14 @@ public class FireBaseDBManager : Singleton<FireBaseDBManager>
             string jsonAch = JsonUtility.ToJson(achievements);
             Debug.Log(jsonAch);
             databaseReference.Child("users").Child(user.UserId).Child("achievements").SetRawJsonValueAsync(jsonAch);
+
+            databaseReference.Child("users").Child(user.UserId).Child("achievements").Child("ach1").SetRawJsonValueAsync(JsonUtility.ToJson(new Ach()));
+            Ach ach2 = new Ach("게임플레이", "게임플레이 3회", 3, 0, 2000);
+            databaseReference.Child("users").Child(user.UserId).Child("achievements").Child("ach2").SetRawJsonValueAsync(JsonUtility.ToJson(ach2));
+
+
             Heart.Instance.Init();
-            AchievementsManager.Instance.GetAch();
+            AchievementsManager.Instance.Init();
 
         });
         
