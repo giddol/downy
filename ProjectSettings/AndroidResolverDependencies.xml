@@ -18,34 +18,34 @@
     <file>Assets/Plugins/Android/com.android.support.support-v4-25.2.0.aar</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-auth-11.8.0.aar</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-auth-api-phone-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-auth-api-phone-license-11.8.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-auth-api-phone-license-11.8.0</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-auth-base-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-auth-base-license-11.8.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-auth-base-license-11.8.0</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-base-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-base-license-11.8.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-base-license-11.8.0</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-basement-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-basement-license-11.8.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-basement-license-11.8.0</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-drive-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-drive-license-11.8.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-drive-license-11.8.0</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-games-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-games-license-11.8.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-games-license-11.8.0</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-nearby-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-nearby-license-11.8.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-nearby-license-11.8.0</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-tasks-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-tasks-license-11.8.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-tasks-license-11.8.0</file>
     <file>Assets/Plugins/Android/com.google.firebase.firebase-analytics-11.8.0.aar</file>
     <file>Assets/Plugins/Android/com.google.firebase.firebase-analytics-impl-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.firebase.firebase-analytics-impl-license-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.firebase.firebase-analytics-license-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.firebase.firebase-app-unity-4.4.3.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-analytics-impl-license-11.8.0</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-analytics-license-11.8.0</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-app-unity-4.4.3</file>
     <file>Assets/Plugins/Android/com.google.firebase.firebase-auth-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.firebase.firebase-auth-license-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.firebase.firebase-auth-unity-4.4.3.aar</file>
-    <file>Assets/Plugins/Android/com.google.firebase.firebase-common-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.firebase.firebase-common-license-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.firebase.firebase-core-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.firebase.firebase-iid-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.firebase.firebase-iid-license-11.8.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.games.gpgs-plugin-support-0.9.50.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-auth-license-11.8.0</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-auth-unity-4.4.3</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-common-11.8.0</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-common-license-11.8.0</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-core-11.8.0</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-iid-11.8.0</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-iid-license-11.8.0</file>
+    <file>Assets/Plugins/Android/com.google.games.gpgs-plugin-support-0.9.50</file>
   </files>
 </dependencies>

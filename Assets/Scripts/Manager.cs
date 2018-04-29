@@ -65,7 +65,6 @@ public class Manager : Singleton<Manager> {
                     Vibrate();
                     _player.State = PlayerState.Stop;
                     UIManager.Instance.InvokeGameOver();
-                    AchievementsManager.Instance.CheckPlayTime();
                     break;
             }
         }
@@ -131,8 +130,8 @@ public class Manager : Singleton<Manager> {
         Init();
         UIManager.Instance.ShowTitle();
 
-        //_bestScore = PlayerPrefs.GetInt("_bestScore");
-        _bestScore = 0;
+        _bestScore = PlayerPrefs.GetInt("_bestScore");
+
     }
 
     private void Init()
@@ -272,14 +271,12 @@ public class Manager : Singleton<Manager> {
     {
         _score = score;
 
-        
+        CheckAchievement(score);
 
         if (_bestScore < _score)
         {
             _bestScore = _score;
             _isBestScore = true;
-
-            AchievementsManager.Instance.CheckAchievement(score);
 
             PlayerPrefs.SetInt("_bestScore", _bestScore);
             PlayerPrefs.Save();
@@ -288,7 +285,15 @@ public class Manager : Singleton<Manager> {
         UIManager.Instance.Score = _score;
     }
 
-    
+    public void CheckAchievement(int score)
+    {
+        if (PlayerPrefs.GetInt("Ach1") != 1 && score >= 5)
+        {
+            PlayerPrefs.SetInt("Ach1", 1);
+            PlayerPrefs.Save();
+            UIManager.Instance.testText.text = "업적1 달성";
+        }
+    }
     public void InactiveQuitAlarm()
     {
         QuitAlarm.SetActive(false);
